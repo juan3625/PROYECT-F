@@ -1,0 +1,192 @@
+.fox-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: var(--color-background, #fbf7f1);
+  color: var(--color-foreground, #2d211c);
+}
+
+.fox-loading__card {
+  width: min(100%, 34rem);
+  text-align: center;
+}
+
+.fox-loading__stage {
+  position: relative;
+  width: min(82vw, 20rem);
+  height: min(82vw, 20rem);
+  margin: 0 auto 1rem;
+}
+
+.fox-loading__head {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 50%;
+  width: 70%;
+  height: auto;
+  transform: translateX(-50%);
+  animation: fox-head-in 0.65s ease-out both;
+}
+
+.fox-loading__body {
+  position: absolute;
+  inset: 29% 0 0;
+  width: 100%;
+  height: 71%;
+  overflow: visible;
+}
+
+.wood-body {
+  transform-origin: 130px 116px;
+  animation: wood-appear 0.8s 0.45s ease-out both;
+}
+
+.wood-torso {
+  fill: #a96636;
+  stroke: #633b27;
+  stroke-width: 4;
+}
+
+.wood-limb {
+  fill: none;
+  stroke: #8e522f;
+  stroke-width: 17;
+  stroke-linecap: round;
+}
+
+.wood-arm-right {
+  transform-origin: 178px 116px;
+  animation: arm-wave 1.5s 1.1s ease-in-out infinite alternate;
+}
+
+.wood-joint {
+  fill: #d08a4d;
+  stroke: #633b27;
+  stroke-width: 4;
+}
+
+.wood-grain {
+  fill: none;
+  stroke: #e3a568;
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.8;
+}
+
+.wood-shadow {
+  fill: #633b27;
+  opacity: 0.15;
+  animation: shadow-breathe 1.5s ease-in-out infinite alternate;
+}
+
+.fox-coin {
+  transform-origin: 231px 151px;
+  animation: coin-shine 1.5s 1.1s ease-in-out infinite alternate;
+}
+
+.coin-edge {
+  fill: #b87525;
+  stroke: #6f431e;
+  stroke-width: 3;
+}
+
+.coin-face {
+  fill: #f3bf55;
+}
+
+.coin-symbol {
+  fill: #7a471e;
+  font-size: 18px;
+  font-weight: 800;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.fox-loading__copy h1 {
+  margin: 0;
+  color: inherit;
+  font-size: clamp(1.25rem, 4vw, 1.65rem);
+  font-weight: 750;
+}
+
+.fox-loading__copy p {
+  margin: 0.5rem auto 0;
+  max-width: 28rem;
+  color: var(--color-muted-foreground, #765f52);
+  font-size: 0.95rem;
+}
+
+.fox-loading__copy button {
+  margin-top: 1rem;
+  border: 0;
+  border-radius: 0.75rem;
+  padding: 0.7rem 1.15rem;
+  background: var(--color-primary, #b96b3c);
+  color: var(--color-primary-foreground, #fffaf5);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fox-loading__copy button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primary, #b96b3c) 45%, white);
+  outline-offset: 3px;
+}
+
+.fox-loading__dots {
+  display: block;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin: 1rem auto 0;
+  border-radius: 50%;
+  background: var(--color-primary, #b96b3c);
+  box-shadow: 0.8rem 0 var(--color-primary, #b96b3c), 1.6rem 0 var(--color-primary, #b96b3c);
+  animation: loading-dots 1s infinite ease-in-out;
+}
+
+@keyframes fox-head-in {
+  from { opacity: 0; transform: translate(-50%, -1rem) scale(0.86); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@keyframes wood-appear {
+  from { opacity: 0; transform: translateY(1.5rem) scaleY(0.7); }
+  to { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+@keyframes arm-wave {
+  from { transform: rotate(-5deg); }
+  to { transform: rotate(7deg); }
+}
+
+@keyframes coin-shine {
+  from { transform: translateY(0) rotate(-4deg); }
+  to { transform: translateY(-0.35rem) rotate(5deg); }
+}
+
+@keyframes shadow-breathe {
+  from { transform: scaleX(0.9); opacity: 0.1; }
+  to { transform: scaleX(1.05); opacity: 0.2; }
+}
+
+@keyframes loading-dots {
+  0%, 100% { opacity: 0.35; transform: translateX(-0.15rem); }
+  50% { opacity: 1; transform: translateX(0.15rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fox-loading *,
+  .fox-loading *::before,
+  .fox-loading *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .fox-loading { padding: 2rem; }
+  .fox-loading__stage { width: min(52vw, 22rem); height: min(52vw, 22rem); }
+}
