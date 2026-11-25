@@ -7,7 +7,14 @@ export function ProgressBar({ valor }: { valor: number }) {
   const barColor = pct >= 90 ? "bg-green" : pct >= 50 ? "bg-gold" : "bg-primary";
 
   return (
-    <div className="h-2 w-full overflow-hidden rounded-full bg-secondary/30">
+    <div
+      className="h-2 w-full overflow-hidden rounded-full bg-secondary/30"
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(pct)}
+      aria-label={`Progreso ${Math.round(pct)} por ciento`}
+    >
       <div
         className={`h-full rounded-full ${barColor} transition-colors duration-500`}
         style={{ width: `${pct}%` }}
