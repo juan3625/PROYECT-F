@@ -30,7 +30,7 @@ export function MovimientoItem({ movimiento }: { movimiento: Movimiento }) {
           onClick={() => marcarGastoPagado(movimiento.id)}
           className="shrink-0 rounded-lg border border-primary/50 px-2.5 py-1 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
         >
-          Marcar pagado
+          Confirmar pago
         </button>
       )}
       <span className={`shrink-0 text-sm font-semibold ${esIngreso ? "text-green" : "text-danger"}`}>

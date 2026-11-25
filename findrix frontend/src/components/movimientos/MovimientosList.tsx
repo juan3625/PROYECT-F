@@ -1,14 +1,21 @@
 import { MovimientoItem } from "./MovimientoItem";
 import type { Movimiento } from "../../types";
+import { EmptyState } from "../ui/EmptyState";
 
 type GrupoMovimientos = [string, Movimiento[]];
 
-export function MovimientosList({ grupos }: { grupos: GrupoMovimientos[] }) {
+export function MovimientosList({ grupos, onRegistrar }: { grupos: GrupoMovimientos[]; onRegistrar: () => void }) {
   if (grupos.length === 0) {
     return (
-      <p className="rounded-xl bg-base-soft px-4 py-6 text-center text-sm text-neutral">
-        Todavía no hay movimientos en esta categoría.
-      </p>
+      <EmptyState
+        titulo="Aún no hay movimientos"
+        descripcion="Registra un gasto o un ingreso para empezar a ver tu actividad aquí."
+        accion={
+          <button onClick={onRegistrar} className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-surface">
+            Registrar movimiento
+          </button>
+        }
+      />
     );
   }
 
