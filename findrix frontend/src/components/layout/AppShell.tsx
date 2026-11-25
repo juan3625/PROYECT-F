@@ -33,8 +33,8 @@ export function AppShell() {
   const context: ShellContext = { abrirRegistro };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-base-soft py-6">
-      <div className="relative flex h-[720px] w-[380px] flex-col overflow-hidden rounded-[2.5rem] border-8 border-primary-dark/90 bg-base shadow-2xl">
+    <div className="min-h-screen bg-base-soft">
+      <div className="relative flex min-h-screen flex-col bg-base">
         <BrandBar />
         <div className="no-scrollbar flex-1 overflow-y-auto pb-24">
           <Outlet context={context} />
