@@ -44,7 +44,7 @@ export function ProgressOverview({
           titulo="No hay metas ni préstamos todavía"
           descripcion="Crea uno para ver aquí cuánto llevas y cuánto falta."
         />
-      ) : (
+      ) : (<>
         <div className="flex flex-col gap-4">
           {elementos.slice(0, 5).map((elemento) => {
             const avance = porcentaje(elemento.actual, elemento.total);
@@ -63,7 +63,10 @@ export function ProgressOverview({
             );
           })}
         </div>
-      )}
+        {elementos.length > 5 && (
+          <p className="mt-3 text-xs text-neutral">Mostrando los cinco primeros elementos. Consulta Metas para ver el resto.</p>
+        )}
+      </>)}
     </section>
   );
 }
