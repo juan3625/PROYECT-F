@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './context/AuthContext'
+import { PreferencesProvider } from './context/PreferencesContext'
 
 // AppDataProvider ya no envuelve toda la app aquí: solo se monta dentro de
 // las rutas protegidas (ver RequireAuth), porque depende de que exista una
@@ -11,9 +12,11 @@ import { AuthProvider } from './context/AuthContext'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <PreferencesProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </PreferencesProvider>
     </BrowserRouter>
   </StrictMode>,
 )
