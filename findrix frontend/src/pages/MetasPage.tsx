@@ -4,6 +4,7 @@ import { useAppData } from "../context/AppDataContext";
 import { MetaCard } from "../components/metas/MetaCard";
 import { NuevaMetaForm } from "../components/metas/NuevaMetaForm";
 import { Sheet } from "../components/ui/Sheet";
+import { EmptyState } from "../components/ui/EmptyState";
 import type { ShellContext } from "../components/layout/AppShell";
 
 type Tab = "ahorros" | "prestamos";
@@ -38,7 +39,19 @@ export function MetasPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {tab === "ahorros"
+        {tab === "ahorros" && metasAhorro.length === 0 ? (
+          <EmptyState
+            titulo="Aún no tienes metas de ahorro"
+            descripcion="Crea una meta para darle un propósito concreto a tu ahorro."
+            accion={<button onClick={() => setCreando(true)} className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-surface">Crear meta</button>}
+          />
+        ) : tab === "prestamos" && prestamos.length === 0 ? (
+          <EmptyState
+            titulo="No tienes préstamos registrados"
+            descripcion="Registra el dinero que debes o que te deben para darle seguimiento."
+            accion={<button onClick={() => setCreando(true)} className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-surface">Registrar préstamo</button>}
+          />
+        ) : tab === "ahorros"
           ? metasAhorro.map((m) => (
               <MetaCard
                 key={m.id}
