@@ -63,6 +63,7 @@ export function MetasPage() {
                 onAbonar={() =>
                   abrirRegistro({ tab: "abono", origenAbono: { tipo: "ahorro", id: m.id } })
                 }
+                textoAccion="Agregar dinero"
               />
             ))
           : prestamos.map((p) => (
@@ -76,6 +77,7 @@ export function MetasPage() {
                 onAbonar={() =>
                   abrirRegistro({ tab: "abono", origenAbono: { tipo: "prestamo", id: p.id } })
                 }
+                textoAccion={p.tipo === "presto" ? "Registrar devolución" : "Registrar pago"}
               />
             ))}
       </div>

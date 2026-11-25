@@ -9,6 +9,7 @@ export function MetaCard({
   montoTotal,
   etiquetaFecha,
   onAbonar,
+  textoAccion = "Agregar dinero",
 }: {
   nombre: string;
   icono: string;
@@ -16,6 +17,7 @@ export function MetaCard({
   montoTotal: number;
   etiquetaFecha?: string;
   onAbonar: () => void;
+  textoAccion?: string;
 }) {
   return (
     <div className="rounded-2xl border border-secondary/40 bg-surface p-4">
@@ -39,7 +41,7 @@ export function MetaCard({
         onClick={onAbonar}
         className="mt-3 w-full rounded-xl border border-primary py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-surface"
       >
-        Abonar
+        {textoAccion}
       </button>
     </div>
   );
