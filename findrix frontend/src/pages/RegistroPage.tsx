@@ -7,7 +7,7 @@ const campoClase =
   "rounded-xl border border-secondary/50 bg-base-soft px-4 py-2.5 text-sm text-primary-dark outline-none placeholder:text-neutral focus:border-primary";
 
 export function RegistroPage() {
-  const { usuario, registrar, error, limpiarError } = useAuth();
+  const { usuario, registrar, error, limpiarError, cargando } = useAuth();
   const navigate = useNavigate();
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
@@ -91,9 +91,10 @@ export function RegistroPage() {
 
         <button
           type="submit"
-          className="rounded-xl bg-primary py-3 text-sm font-semibold text-surface transition-opacity hover:opacity-90"
+          disabled={cargando}
+          className="rounded-xl bg-primary py-3 text-sm font-semibold text-surface transition-opacity hover:opacity-90 disabled:opacity-50"
         >
-          Crear cuenta
+          {cargando ? "Creando cuenta…" : "Crear cuenta"}
         </button>
 
         <p className="text-center text-xs text-neutral">

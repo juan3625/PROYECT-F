@@ -7,7 +7,7 @@ const campoClase =
   "rounded-xl border border-secondary/50 bg-base-soft px-4 py-2.5 text-sm text-primary-dark outline-none placeholder:text-neutral focus:border-primary";
 
 export function LoginPage() {
-  const { usuario, login, error, limpiarError } = useAuth();
+  const { usuario, login, error, limpiarError, cargando } = useAuth();
   const navigate = useNavigate();
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -59,9 +59,10 @@ export function LoginPage() {
 
         <button
           type="submit"
-          className="rounded-xl bg-primary py-3 text-sm font-semibold text-surface transition-opacity hover:opacity-90"
+          disabled={cargando}
+          className="rounded-xl bg-primary py-3 text-sm font-semibold text-surface transition-opacity hover:opacity-90 disabled:opacity-50"
         >
-          Iniciar sesión
+          {cargando ? "Iniciando sesión…" : "Iniciar sesión"}
         </button>
 
         <p className="text-center text-xs text-neutral">
