@@ -5,6 +5,7 @@ import { FAB } from "./FAB";
 import { QuickAddModal } from "../quickadd/QuickAddModal";
 import { useAppData } from "../../context/AppDataContext";
 import { BrandBar } from "./BrandBar";
+import { FinancialNotifications } from "../notifications/FinancialNotifications";
 
 export interface AbonoOrigen {
   tipo: "ahorro" | "prestamo";
@@ -52,6 +53,7 @@ export function AppShell() {
               <button onClick={recargarDatos} className="mt-2 rounded-lg bg-danger px-3 py-1.5 text-xs font-semibold text-surface">Reintentar</button>
             </div>
           )}
+          <FinancialNotifications />
           <div className="no-scrollbar flex-1 overflow-y-auto pb-24 md:pb-8">
             <Outlet context={context} />
           </div>

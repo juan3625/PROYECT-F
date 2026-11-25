@@ -3,17 +3,24 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 export type Tema = "claro" | "oscuro" | "automatico";
 export type Acento = "terracota" | "musgo" | "oro" | "cobre";
 export type TamanoTexto = "normal" | "grande";
+export type DiasAnticipacion = 0 | 1 | 2 | 3 | 7;
 
 interface Preferencias {
   tema: Tema;
   acento: Acento;
   tamanoTexto: TamanoTexto;
+  notificacionesActivas: boolean;
+  diasAnticipacion: DiasAnticipacion;
 }
 
 interface PreferencesContextValue extends Preferencias {
   cambiarTema: (tema: Tema) => void;
   cambiarAcento: (acento: Acento) => void;
   cambiarTamanoTexto: (tamano: TamanoTexto) => void;
+  activarNotificaciones: () => Promise<NotificationPermission | "no-disponible">;
+  desactivarNotificaciones: () => void;
+  cambiarDiasAnticipacion: (dias: DiasAnticipacion) => void;
+  permisoNotificaciones: NotificationPermission | "no-disponible";
 }
 
 const STORAGE_KEY = "findrix_preferencias";
@@ -21,6 +28,8 @@ const valoresIniciales: Preferencias = {
   tema: "claro",
   acento: "terracota",
   tamanoTexto: "normal",
+  notificacionesActivas: false,
+  diasAnticipacion: 1,
 };
 
 const PreferencesContext = createContext<PreferencesContextValue | null>(null);
@@ -32,6 +41,10 @@ function leerPreferencias(): Preferencias {
       tema: guardadas?.tema ?? valoresIniciales.tema,
       acento: guardadas?.acento ?? valoresIniciales.acento,
       tamanoTexto: guardadas?.tamanoTexto ?? valoresIniciales.tamanoTexto,
+      notificacionesActivas: guardadas?.notificacionesActivas ?? valoresIniciales.notificacionesActivas,
+      diasAnticipacion: [0, 1, 2, 3, 7].includes(guardadas?.diasAnticipacion)
+        ? guardadas.diasAnticipacion
+        : valoresIniciales.diasAnticipacion,
     };
   } catch {
     return valoresIniciales;
@@ -40,6 +53,9 @@ function leerPreferencias(): Preferencias {
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [preferencias, setPreferencias] = useState<Preferencias>(leerPreferencias);
+  const [permisoNotificaciones, setPermisoNotificaciones] = useState<NotificationPermission | "no-disponible">(
+    () => (typeof Notification === "undefined" ? "no-disponible" : Notification.permission)
+  );
 
   useEffect(() => {
     const html = document.documentElement;
@@ -50,6 +66,22 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(preferencias));
   }, [preferencias]);
 
+  const activarNotificaciones = async () => {
+    if (typeof Notification === "undefined") {
+      setPermisoNotificaciones("no-disponible");
+      return "no-disponible";
+    }
+    const permiso = await Notification.requestPermission();
+    setPermisoNotificaciones(permiso);
+    if (permiso === "granted") {
+      setPreferencias((actual) => ({ ...actual, notificacionesActivas: true }));
+    }
+    return permiso;
+  };
+
+  const desactivarNotificaciones = () =>
+    setPreferencias((actual) => ({ ...actual, notificacionesActivas: false }));
+
   const value = useMemo(
     () => ({
       ...preferencias,
@@ -57,8 +89,13 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       cambiarAcento: (acento: Acento) => setPreferencias((actual) => ({ ...actual, acento })),
       cambiarTamanoTexto: (tamanoTexto: TamanoTexto) =>
         setPreferencias((actual) => ({ ...actual, tamanoTexto })),
+      activarNotificaciones,
+      desactivarNotificaciones,
+      cambiarDiasAnticipacion: (diasAnticipacion: DiasAnticipacion) =>
+        setPreferencias((actual) => ({ ...actual, diasAnticipacion })),
+      permisoNotificaciones,
     }),
-    [preferencias]
+    [preferencias, permisoNotificaciones]
   );
 
   return <PreferencesContext.Provider value={value}>{children}</PreferencesContext.Provider>;
