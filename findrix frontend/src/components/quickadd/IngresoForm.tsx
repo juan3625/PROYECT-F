@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FeedbackMessage } from "../ui/FeedbackMessage";
 import { useAppData } from "../../context/AppDataContext";
 import { Icon } from "../ui/Icon";
 
@@ -9,17 +10,27 @@ export function IngresoForm({ onListo }: { onListo: () => void }) {
   const [monto, setMonto] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [categoriaId, setCategoriaId] = useState(categoriasIngreso[0]?.id ?? "");
+  const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const puedeGuardar = Number(monto) > 0 && categoriaId;
 
-  const guardar = () => {
-    agregarIngreso({
+  const guardar = async () => {
+    setGuardando(true);
+    setError(null);
+    try {
+      await agregarIngreso({
       monto: Number(monto),
       descripcion:
         descripcion.trim() || categoriasIngreso.find((c) => c.id === categoriaId)?.nombre || "Ingreso",
       categoriaId,
-    });
-    onListo();
+      });
+      onListo();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo guardar el ingreso.");
+    } finally {
+      setGuardando(false);
+    }
   };
 
   return (
@@ -41,7 +52,7 @@ export function IngresoForm({ onListo }: { onListo: () => void }) {
       <input
         value={descripcion}
         onChange={(e) => setDescripcion(e.target.value)}
-        placeholder="Descripción (opcional)"
+        placeholder="Descripción (opcional, ej. nómina o venta)"
         className="rounded-xl border border-secondary/50 bg-base-soft px-4 py-2.5 text-sm text-primary-dark outline-none placeholder:text-neutral focus:border-primary"
       />
 
@@ -65,12 +76,14 @@ export function IngresoForm({ onListo }: { onListo: () => void }) {
         </div>
       </div>
 
+      {error && <FeedbackMessage tipo="error">{error}</FeedbackMessage>}
+
       <button
         onClick={guardar}
-        disabled={!puedeGuardar}
+        disabled={!puedeGuardar || guardando}
         className="rounded-xl bg-green py-3 text-sm font-semibold text-surface transition-opacity disabled:opacity-40"
       >
-        Guardar ingreso
+        {guardando ? "Guardando…" : "Guardar ingreso"}
       </button>
     </div>
   );
