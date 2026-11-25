@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import type { Categoria, Gasto } from "../../types";
 import { formatoMoneda } from "../../utils/format";
+import { ChartEmptyState } from "./ChartEmptyState";
 
 const colores = ["#b85c38", "#c19a6b", "#6a8d73", "#9c4a2e", "#5f4b32", "#e0b99b"];
 
@@ -40,12 +41,10 @@ export function CategoryExpensesChart({
         <p className="text-xs text-neutral">Dónde se concentra tu gasto este mes</p>
       </div>
       {data.length === 0 ? (
-        <div className="flex min-h-52 items-center justify-center rounded-xl bg-base-soft px-5 text-center">
-          <div>
-            <p className="text-sm font-semibold text-primary-dark">Todavía no hay categorías con gastos</p>
-            <p className="mt-1 text-xs text-neutral">Cuando registres gastos aparecerá aquí su distribución.</p>
-          </div>
-        </div>
+        <ChartEmptyState
+          titulo="Todavía no hay categorías con gastos"
+          descripcion="Cuando registres gastos aparecerá aquí su distribución."
+        />
       ) : (
         <div className="h-56 w-full" role="img" aria-label="Barras horizontales de gastos agrupados por categoría">
           <ResponsiveContainer width="100%" height="100%">
