@@ -48,7 +48,7 @@ export function CategoryExpensesChart({
           descripcion="Cuando registres gastos aparecerá aquí su distribución."
         />
       ) : (
-        <div className="h-56 w-full" role="img" aria-label="Barras horizontales de gastos agrupados por categoría">
+        <div className="h-56 w-full sm:h-64" role="img" aria-label="Barras horizontales de gastos agrupados por categoría">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} layout="vertical" margin={{ top: 4, right: 12, left: 8, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0b99b" opacity={0.35} horizontal={false} />

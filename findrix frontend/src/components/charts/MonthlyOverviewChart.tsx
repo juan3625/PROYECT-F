@@ -33,7 +33,7 @@ export function MonthlyOverviewChart({
           descripcion="Registra un ingreso o un gasto para ver la comparación."
         />
       ) : (
-        <div className="h-56 w-full" role="img" aria-label={`Ingresos ${formatoMoneda(ingresos)} y gastos ${formatoMoneda(gastos)}`}>
+        <div className="h-56 w-full sm:h-64" role="img" aria-label={`Ingresos ${formatoMoneda(ingresos)} y gastos ${formatoMoneda(gastos)}`}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0b99b" opacity={0.45} />
