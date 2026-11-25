@@ -7,10 +7,20 @@ import { ProgressBar } from "../components/ui/ProgressBar";
 import type { ShellContext } from "../components/layout/AppShell";
 import findrixIcon from "../assets/findrix-icon.png";
 import { EmptyState } from "../components/ui/EmptyState";
-
+import { MonthlyOverviewChart } from "../components/charts/MonthlyOverviewChart";
+import { CategoryExpensesChart } from "../components/charts/CategoryExpensesChart";
+import { ProgressOverview } from "../components/charts/ProgressOverview";
 export function InicioPage() {
-  const { balanceMes, totalIngresosMes, totalGastosMes, proximosAVencer, metasAhorro } =
-    useAppData();
+  const {
+    balanceMes,
+    totalIngresosMes,
+    totalGastosMes,
+    gastosDelMes,
+    categorias,
+    proximosAVencer,
+    metasAhorro,
+    prestamos,
+  } = useAppData();
   const { usuario } = useAuth();
   const { abrirRegistro } = useOutletContext<ShellContext>();
   const navigate = useNavigate();
@@ -43,8 +53,13 @@ export function InicioPage() {
           <div>
             <p className="text-xs text-secondary">↑ Ingresos</p>
             <p className="text-sm font-semibold text-green">{formatoMoneda(totalIngresosMes)}</p>
-          </div>
-          <div>
+      </div>
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <MonthlyOverviewChart ingresos={totalIngresosMes} gastos={totalGastosMes} />
+        <CategoryExpensesChart gastos={gastosDelMes} categorias={categorias} />
+      </div>
+      <ProgressOverview metas={metasAhorro} prestamos={prestamos} />
+      <div>
             <p className="text-xs text-secondary">↓ Gastos</p>
             <p className="text-sm font-semibold text-secondary">{formatoMoneda(totalGastosMes)}</p>
           </div>
@@ -112,4 +127,3 @@ export function InicioPage() {
     </div>
   );
 }
-
