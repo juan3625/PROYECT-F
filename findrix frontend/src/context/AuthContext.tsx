@@ -25,6 +25,7 @@ interface AuthContextValue {
   cargando: boolean;
   login: (correo: string, contrasena: string) => Promise<boolean>;
   registrar: (nombre: string, correo: string, contrasena: string) => Promise<boolean>;
+  loginConGoogle: (idToken: string) => Promise<boolean>;
   cerrarSesion: () => void;
   limpiarError: () => void;
 }
@@ -91,6 +92,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const loginConGoogle = async (idToken: string) => {
+    setError(null);
+    setCargando(true);
+    try {
+      const resultado = await apiFetch<RespuestaAuth>("/auth/google", {
+        method: "POST",
+        body: JSON.stringify({ idToken }),
+      });
+      persistirSesion(resultado);
+      return true;
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "No se pudo iniciar sesión con Google.");
+      return false;
+    } finally {
+      setCargando(false);
+    }
+  };
+
   const cerrarSesion = () => persistirSesion(null);
   const limpiarError = () => setError(null);
 
@@ -103,6 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         cargando,
         login,
         registrar,
+        loginConGoogle,
         cerrarSesion,
         limpiarError,
       }}

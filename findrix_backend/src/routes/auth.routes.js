@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postRegistro, postLogin } from "../controllers/auth.controller.js";
+import { postRegistro, postLogin, postGoogle } from "../controllers/auth.controller.js";
 import {
   postOlvideContrasena,
   postRestablecerContrasena,
@@ -58,6 +58,33 @@ authRoutes.post("/registro", postRegistro);
  *                 example: contrasena123
  */
 authRoutes.post("/login", postLogin);
+
+/**
+ * @openapi
+ * /api/auth/google:
+ *   post:
+ *     summary: Inicia sesión o crea una cuenta con un ID token de Google
+ *     description: El ID token se verifica en el backend contra el Client ID configurado.
+ *     tags: [Auth]
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [idToken]
+ *             properties:
+ *               idToken:
+ *                 type: string
+ *                 description: ID token emitido por Google Identity Services.
+ *     responses:
+ *       200:
+ *         description: Respuesta con el mismo formato del login tradicional.
+ *       409:
+ *         description: El correo ya pertenece a una cuenta con contraseña.
+ */
+authRoutes.post("/google", limitarRecuperacion, postGoogle);
 
 /**
  * @openapi

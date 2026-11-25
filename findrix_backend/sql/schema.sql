@@ -8,7 +8,9 @@ CREATE TABLE usuario (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   nombre      TEXT NOT NULL,
   correo      TEXT NOT NULL UNIQUE,
-  contrasena  TEXT NOT NULL, -- hash de bcrypt, nunca texto plano
+  contrasena  TEXT, -- hash de bcrypt, nunca texto plano; NULL para cuentas Google
+  google_sub  TEXT UNIQUE,
+  correo_verificado BOOLEAN NOT NULL DEFAULT false,
   creado_en   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

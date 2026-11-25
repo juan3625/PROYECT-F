@@ -1,19 +1,21 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthShell } from "../components/layout/AuthShell";
+import { GoogleSignInButton } from "../components/auth/GoogleSignInButton";
 import { useAuth } from "../context/AuthContext";
 
 const campoClase =
   "rounded-xl border border-secondary/50 bg-base-soft px-4 py-2.5 text-sm text-primary-dark outline-none placeholder:text-neutral focus:border-primary";
 
 export function RegistroPage() {
-  const { usuario, registrar, error, limpiarError, cargando } = useAuth();
+  const { usuario, registrar, loginConGoogle, error, limpiarError, cargando } = useAuth();
   const navigate = useNavigate();
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [confirmar, setConfirmar] = useState("");
   const [errorLocal, setErrorLocal] = useState<string | null>(null);
+  const [errorGoogle, setErrorGoogle] = useState<string | null>(null);
 
   useEffect(() => {
     if (usuario) navigate("/", { replace: true });
@@ -35,7 +37,12 @@ export function RegistroPage() {
     if (await registrar(nombre, correo, contrasena)) navigate("/", { replace: true });
   };
 
-  const mensajeError = errorLocal ?? error;
+  const continuarConGoogle = async (idToken: string) => {
+    setErrorGoogle(null);
+    if (await loginConGoogle(idToken)) navigate("/", { replace: true });
+  };
+
+  const mensajeError = errorGoogle ?? errorLocal ?? error;
 
   return (
     <AuthShell>
@@ -96,6 +103,15 @@ export function RegistroPage() {
         >
           {cargando ? "Creando cuenta…" : "Crear cuenta"}
         </button>
+
+        <div className="flex items-center gap-3 text-xs text-neutral before:h-px before:flex-1 before:bg-secondary/50 after:h-px after:flex-1 after:bg-secondary/50">
+          o continúa con
+        </div>
+        <GoogleSignInButton
+          onCredential={continuarConGoogle}
+          onError={setErrorGoogle}
+          disabled={cargando}
+        />
 
         <p className="text-center text-xs text-neutral">
           ¿Ya tienes cuenta?{" "}

@@ -1,16 +1,18 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthShell } from "../components/layout/AuthShell";
+import { GoogleSignInButton } from "../components/auth/GoogleSignInButton";
 import { useAuth } from "../context/AuthContext";
 
 const campoClase =
   "rounded-xl border border-secondary/50 bg-base-soft px-4 py-2.5 text-sm text-primary-dark outline-none placeholder:text-neutral focus:border-primary";
 
 export function LoginPage() {
-  const { usuario, login, error, limpiarError, cargando } = useAuth();
+  const { usuario, login, loginConGoogle, error, limpiarError, cargando } = useAuth();
   const navigate = useNavigate();
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
+  const [errorGoogle, setErrorGoogle] = useState<string | null>(null);
 
   // Si ya hay sesión (ej. volviste a /login manualmente), no te deja quedarte ahí.
   useEffect(() => {
@@ -20,6 +22,11 @@ export function LoginPage() {
   const enviar = async (e: FormEvent) => {
     e.preventDefault();
     if (await login(correo, contrasena)) navigate("/", { replace: true });
+  };
+
+  const continuarConGoogle = async (idToken: string) => {
+    setErrorGoogle(null);
+    if (await loginConGoogle(idToken)) navigate("/", { replace: true });
   };
 
   return (
@@ -55,7 +62,7 @@ export function LoginPage() {
           />
         </div>
 
-        {error && <p className="text-xs font-medium text-danger">{error}</p>}
+        {(errorGoogle ?? error) && <p className="text-xs font-medium text-danger">{errorGoogle ?? error}</p>}
 
         <button
           type="submit"
@@ -64,6 +71,15 @@ export function LoginPage() {
         >
           {cargando ? "Iniciando sesión…" : "Iniciar sesión"}
         </button>
+
+        <div className="flex items-center gap-3 text-xs text-neutral before:h-px before:flex-1 before:bg-secondary/50 after:h-px after:flex-1 after:bg-secondary/50">
+          o continúa con
+        </div>
+        <GoogleSignInButton
+          onCredential={continuarConGoogle}
+          onError={setErrorGoogle}
+          disabled={cargando}
+        />
 
         <p className="text-center text-xs text-neutral">
           ¿No tienes cuenta?{" "}
