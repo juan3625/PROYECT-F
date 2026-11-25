@@ -6,7 +6,7 @@ export function PerfilPage() {
   return (
     <div className="flex flex-col gap-5 pb-4">
       <SubPageHeader titulo="Mi perfil" />
-      <div className="flex flex-col gap-4 px-5">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-5 sm:px-8 lg:px-10">
         <Campo label="Nombre" valor={usuario!.nombre} />
         <Campo label="Correo" valor={usuario!.correo} />
         <p className="text-xs text-neutral">
