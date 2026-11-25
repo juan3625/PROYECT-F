@@ -14,7 +14,7 @@ export function CategoriasPage() {
   return (
     <div className="flex flex-col gap-5 pb-4">
       <SubPageHeader titulo="Categorías" />
-      <div className="flex flex-col gap-5 px-5">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-5 sm:px-8 lg:px-10">
         <Bloque titulo="Gastos" items={gasto} />
         <Bloque titulo="Ingresos" items={ingreso} />
         <button
