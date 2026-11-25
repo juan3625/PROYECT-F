@@ -4,7 +4,7 @@ export function SeguridadPage() {
   return (
     <div className="flex flex-col gap-5 pb-4">
       <SubPageHeader titulo="Seguridad" />
-      <div className="flex flex-col gap-3 px-5">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-3 px-5 sm:px-8 lg:px-10">
         <div className="rounded-xl border border-secondary/30 bg-surface px-4 py-3 text-sm text-primary-dark">
           Cambiar contraseña
         </div>
