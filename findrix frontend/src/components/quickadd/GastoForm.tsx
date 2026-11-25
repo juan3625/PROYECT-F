@@ -27,6 +27,7 @@ export function GastoForm({ onListo }: { onListo: () => void }) {
   const [fechaVencimiento, setFechaVencimiento] = useState("");
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [exito, setExito] = useState<string | null>(null);
 
   const puedeGuardar = Number(monto) > 0 && categoriaId && (!esPendiente || fechaVencimiento);
 
@@ -42,7 +43,8 @@ export function GastoForm({ onListo }: { onListo: () => void }) {
       prioridad,
       fechaVencimiento: esPendiente ? fechaVencimiento : undefined,
       });
-      onListo();
+      setExito("El gasto se guardó correctamente.");
+      window.setTimeout(onListo, 450);
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo guardar el gasto.");
     } finally {
@@ -152,6 +154,7 @@ export function GastoForm({ onListo }: { onListo: () => void }) {
       )}
 
       {error && <FeedbackMessage tipo="error">{error}</FeedbackMessage>}
+      {exito && <FeedbackMessage tipo="exito">{exito}</FeedbackMessage>}
 
       <button
         onClick={guardar}

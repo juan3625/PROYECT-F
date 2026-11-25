@@ -18,6 +18,7 @@ export function NuevaMetaForm({
   const [icono, setIcono] = useState(iconosCategoria[0]);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [exito, setExito] = useState<string | null>(null);
 
   const puedeGuardar = nombre.trim().length > 0 && Number(monto) > 0;
 
@@ -40,7 +41,8 @@ export function NuevaMetaForm({
         icono,
         });
       }
-      onListo();
+      setExito("La información se guardó correctamente.");
+      window.setTimeout(onListo, 450);
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo guardar la información.");
     } finally {
@@ -134,6 +136,7 @@ export function NuevaMetaForm({
       </div>
 
       {error && <FeedbackMessage tipo="error">{error}</FeedbackMessage>}
+      {exito && <FeedbackMessage tipo="exito">{exito}</FeedbackMessage>}
 
       <button
         onClick={guardar}

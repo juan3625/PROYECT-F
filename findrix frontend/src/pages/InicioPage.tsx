@@ -112,6 +112,3 @@ export function InicioPage() {
   );
 }
 
-function mesActual() {
-  return new Date().toLocaleDateString("es-CO", { month: "long" });
-}

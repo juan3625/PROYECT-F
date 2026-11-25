@@ -37,6 +37,7 @@ export function AbonoForm({
   const [monto, setMonto] = useState("");
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [exito, setExito] = useState<string | null>(null);
 
   const cambiarTipo = (nuevoTipo: "ahorro" | "prestamo") => {
     setTipo(nuevoTipo);
@@ -56,7 +57,8 @@ export function AbonoForm({
       } else {
         await abonarPrestamo(itemId, Number(monto));
       }
-      onListo();
+      setExito("El registro se guardó correctamente.");
+      window.setTimeout(onListo, 450);
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo registrar el abono.");
     } finally {
@@ -136,6 +138,7 @@ export function AbonoForm({
       </div>
 
       {error && <FeedbackMessage tipo="error">{error}</FeedbackMessage>}
+      {exito && <FeedbackMessage tipo="exito">{exito}</FeedbackMessage>}
 
       <button
         onClick={guardar}

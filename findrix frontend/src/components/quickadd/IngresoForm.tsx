@@ -12,6 +12,7 @@ export function IngresoForm({ onListo }: { onListo: () => void }) {
   const [categoriaId, setCategoriaId] = useState(categoriasIngreso[0]?.id ?? "");
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [exito, setExito] = useState<string | null>(null);
 
   const puedeGuardar = Number(monto) > 0 && categoriaId;
 
@@ -25,7 +26,8 @@ export function IngresoForm({ onListo }: { onListo: () => void }) {
         descripcion.trim() || categoriasIngreso.find((c) => c.id === categoriaId)?.nombre || "Ingreso",
       categoriaId,
       });
-      onListo();
+      setExito("El ingreso se guardó correctamente.");
+      window.setTimeout(onListo, 450);
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo guardar el ingreso.");
     } finally {
@@ -77,6 +79,7 @@ export function IngresoForm({ onListo }: { onListo: () => void }) {
       </div>
 
       {error && <FeedbackMessage tipo="error">{error}</FeedbackMessage>}
+      {exito && <FeedbackMessage tipo="exito">{exito}</FeedbackMessage>}
 
       <button
         onClick={guardar}

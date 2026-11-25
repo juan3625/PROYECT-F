@@ -10,6 +10,7 @@ export function NuevaCategoriaForm({ onListo }: { onListo: () => void }) {
   const [icono, setIcono] = useState(iconosCategoria[0]);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [exito, setExito] = useState<string | null>(null);
 
   const puedeGuardar = nombre.trim().length > 0;
 
@@ -18,7 +19,8 @@ export function NuevaCategoriaForm({ onListo }: { onListo: () => void }) {
     setError(null);
     try {
       await agregarCategoria({ nombre: nombre.trim(), tipo, icono });
-      onListo();
+      setExito("La categoría se guardó correctamente.");
+      window.setTimeout(onListo, 450);
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo guardar la categoría.");
     } finally {
@@ -81,6 +83,7 @@ export function NuevaCategoriaForm({ onListo }: { onListo: () => void }) {
       </div>
 
       {error && <FeedbackMessage tipo="error">{error}</FeedbackMessage>}
+      {exito && <FeedbackMessage tipo="exito">{exito}</FeedbackMessage>}
 
       <button
         onClick={guardar}
