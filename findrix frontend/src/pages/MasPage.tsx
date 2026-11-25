@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Tag, BarChart3, User, Lock, LogOut, ChevronRight } from "lucide-react";
+import { Tag, BarChart3, User, Lock, Settings, LogOut, ChevronRight } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 function FilaEnlace({
@@ -63,6 +63,7 @@ export function MasPage() {
         <div className="divide-y divide-secondary/20 rounded-xl border border-secondary/30 bg-surface">
           <FilaEnlace to="/mas/perfil" icono={User} label="Mi perfil" />
           <FilaEnlace to="/mas/seguridad" icono={Lock} label="Seguridad" />
+          <FilaEnlace to="/mas/ajustes" icono={Settings} label="Ajustes" />
         </div>
       </div>
 

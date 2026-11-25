@@ -11,6 +11,7 @@ import { CategoriasPage } from "./pages/CategoriasPage";
 import { ReportesPage } from "./pages/ReportesPage";
 import { PerfilPage } from "./pages/PerfilPage";
 import { SeguridadPage } from "./pages/SeguridadPage";
+import { AjustesPage } from "./pages/AjustesPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/mas/reportes" element={<ReportesPage />} />
           <Route path="/mas/perfil" element={<PerfilPage />} />
           <Route path="/mas/seguridad" element={<SeguridadPage />} />
+          <Route path="/mas/ajustes" element={<AjustesPage />} />
         </Route>
       </Route>
     </Routes>
