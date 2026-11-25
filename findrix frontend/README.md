@@ -72,3 +72,9 @@ src/
 - Autenticación con `bcrypt` real (hash, no texto plano) y JWT firmado.
 - Persistencia en base de datos — hoy todo vive en memoria y se reinicia al
   recargar la página.
+
+## Gráficas del Inicio
+
+La pantalla de Inicio calcula sus visualizaciones con los datos ya cargados por `AppDataContext`; no requiere endpoints adicionales. Incluye la comparación de ingresos y gastos del mes, la distribución de gastos por categoría y el progreso de metas y préstamos.
+
+Las gráficas usan Recharts, `ResponsiveContainer` y textos visibles junto con colores de la paleta Cobre Temperado. Cuando no hay datos, muestran una explicación en lugar de un lienzo vacío.
