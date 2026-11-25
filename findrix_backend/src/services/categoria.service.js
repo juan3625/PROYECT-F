@@ -1,40 +1,33 @@
-import { pool } from "../config/db.js";
+import * as categoriaRepository from "../repositories/categoria.repository.js";
+import { PALETA_CATEGORIAS } from "../constants/categorias.js";
+import { ErrorApi } from "../utils/respuestas.js";
 
-// Paleta fija que el backend rota — el cliente nunca elige el color.
-// Coincide con los tokens que ya usa el frontend (primary, green, gold, ...).
-const PALETA = {
-  gasto: ["primary", "gold", "danger"],
-  ingreso: ["green", "primary", "gold"],
-};
+export async function verificarCategoriaDelUsuario(usuarioId, categoriaId) {
+  const pertenece = await categoriaRepository.existeParaUsuario(categoriaId, usuarioId);
+  if (!pertenece) {
+    throw new ErrorApi(400, "La categoría indicada no existe.");
+  }
+}
 
 async function siguienteColor(usuarioId, tipo) {
-  const { rows } = await pool.query(
-    "SELECT COUNT(*)::int AS total FROM categoria WHERE usuario_id = $1 AND tipo = $2",
-    [usuarioId, tipo]
-  );
-  const paleta = PALETA[tipo];
-  return paleta[rows[0].total % paleta.length];
+  const total = await categoriaRepository.contarPorTipo(usuarioId, tipo);
+  const paleta = PALETA_CATEGORIAS[tipo];
+  return paleta[total % paleta.length];
 }
 
 export async function listar(usuarioId) {
-  const { rows } = await pool.query(
-    `SELECT id, nombre, tipo, icono, color
-     FROM categoria
-     WHERE usuario_id = $1
-     ORDER BY creado_en ASC`,
-    [usuarioId]
-  );
-  return rows;
+  return categoriaRepository.listar(usuarioId);
 }
 
 export async function crear(usuarioId, { nombre, tipo, icono }) {
   const color = await siguienteColor(usuarioId, tipo);
+  return categoriaRepository.crear(usuarioId, { nombre, tipo, icono, color });
+}
 
-  const { rows } = await pool.query(
-    `INSERT INTO categoria (usuario_id, nombre, tipo, icono, color)
-     VALUES ($1, $2, $3, $4, $5)
-     RETURNING id, nombre, tipo, icono, color`,
-    [usuarioId, nombre, tipo, icono, color]
-  );
-  return rows[0];
+export async function actualizar(usuarioId, categoriaId, datos) {
+  const categoria = await categoriaRepository.actualizar(usuarioId, categoriaId, datos);
+  if (!categoria) {
+    throw new ErrorApi(404, "No se encontró esa categoría.");
+  }
+  return categoria;
 }

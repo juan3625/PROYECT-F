@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getPrestamos, postPrestamo, postAbono } from "../controllers/prestamo.controller.js";
+import { getPrestamos, postPrestamo, putPrestamo, postAbono } from "../controllers/prestamo.controller.js";
 
 export const prestamoRoutes = Router();
 
@@ -58,4 +58,5 @@ export const prestamoRoutes = Router();
  */
 prestamoRoutes.get("/", getPrestamos);
 prestamoRoutes.post("/", postPrestamo);
+prestamoRoutes.put("/:id", putPrestamo);
 prestamoRoutes.post("/:id/abonos", postAbono);

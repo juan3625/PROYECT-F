@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getIngresos, postIngreso } from "../controllers/ingreso.controller.js";
+import { getIngresos, postIngreso, putIngreso } from "../controllers/ingreso.controller.js";
 
 export const ingresoRoutes = Router();
 
@@ -36,3 +36,4 @@ export const ingresoRoutes = Router();
  */
 ingresoRoutes.get("/", getIngresos);
 ingresoRoutes.post("/", postIngreso);
+ingresoRoutes.put("/:id", putIngreso);

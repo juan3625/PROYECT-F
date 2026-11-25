@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getMetas, postMeta, postAbono } from "../controllers/metaAhorro.controller.js";
+import { getMetas, postMeta, putMeta, postAbono } from "../controllers/metaAhorro.controller.js";
 
 export const metaAhorroRoutes = Router();
 
@@ -58,4 +58,5 @@ export const metaAhorroRoutes = Router();
  */
 metaAhorroRoutes.get("/", getMetas);
 metaAhorroRoutes.post("/", postMeta);
+metaAhorroRoutes.put("/:id", putMeta);
 metaAhorroRoutes.post("/:id/abonos", postAbono);

@@ -1,21 +1,20 @@
 import { crearIngresoSchema } from "../schemas/ingreso.schema.js";
 import * as ingresoService from "../services/ingreso.service.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
-export async function getIngresos(req, res, next) {
-  try {
-    const ingresos = await ingresoService.listar(req.usuarioId);
-    res.status(200).json(ingresos);
-  } catch (err) {
-    next(err);
-  }
-}
+export const getIngresos = asyncHandler(async (req, res) => {
+  const ingresos = await ingresoService.listar(req.usuarioId);
+  res.status(200).json(ingresos);
+});
 
-export async function postIngreso(req, res, next) {
-  try {
-    const datos = await crearIngresoSchema.validateAsync(req.body);
-    const ingreso = await ingresoService.crear(req.usuarioId, datos);
-    res.status(201).json(ingreso);
-  } catch (err) {
-    next(err);
-  }
-}
+export const postIngreso = asyncHandler(async (req, res) => {
+  const datos = await crearIngresoSchema.validateAsync(req.body);
+  const ingreso = await ingresoService.crear(req.usuarioId, datos);
+  res.status(201).json(ingreso);
+});
+
+export const putIngreso = asyncHandler(async (req, res) => {
+  const datos = await crearIngresoSchema.validateAsync(req.body);
+  const ingreso = await ingresoService.actualizar(req.usuarioId, req.params.id, datos);
+  res.status(200).json(ingreso);
+});

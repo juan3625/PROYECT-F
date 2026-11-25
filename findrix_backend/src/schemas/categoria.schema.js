@@ -8,3 +8,10 @@ export const crearCategoriaSchema = Joi.object({
   tipo: Joi.string().valid("gasto", "ingreso").required(),
   icono: Joi.string().trim().min(1).required(),
 });
+
+// Al actualizar solo se permite cambiar nombre e ícono: cambiar el "tipo" dejaría
+// gastos/ingresos ya registrados apuntando a una categoría del tipo equivocado.
+export const actualizarCategoriaSchema = Joi.object({
+  nombre: Joi.string().trim().min(1).max(60).required(),
+  icono: Joi.string().trim().min(1).required(),
+});

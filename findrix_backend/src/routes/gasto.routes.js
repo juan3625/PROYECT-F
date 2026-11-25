@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getGastos, postGasto, patchMarcarPagado } from "../controllers/gasto.controller.js";
+import { getGastos, postGasto, putGasto, patchMarcarPagado } from "../controllers/gasto.controller.js";
 
 export const gastoRoutes = Router();
 
@@ -59,4 +59,5 @@ export const gastoRoutes = Router();
  */
 gastoRoutes.get("/", getGastos);
 gastoRoutes.post("/", postGasto);
+gastoRoutes.put("/:id", putGasto);
 gastoRoutes.patch("/:id/marcar-pagado", patchMarcarPagado);

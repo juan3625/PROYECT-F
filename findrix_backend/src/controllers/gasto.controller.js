@@ -1,30 +1,25 @@
 import { crearGastoSchema } from "../schemas/gasto.schema.js";
 import * as gastoService from "../services/gasto.service.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
-export async function getGastos(req, res, next) {
-  try {
-    const gastos = await gastoService.listar(req.usuarioId);
-    res.status(200).json(gastos);
-  } catch (err) {
-    next(err);
-  }
-}
+export const getGastos = asyncHandler(async (req, res) => {
+  const gastos = await gastoService.listar(req.usuarioId);
+  res.status(200).json(gastos);
+});
 
-export async function postGasto(req, res, next) {
-  try {
-    const datos = await crearGastoSchema.validateAsync(req.body);
-    const gasto = await gastoService.crear(req.usuarioId, datos);
-    res.status(201).json(gasto);
-  } catch (err) {
-    next(err);
-  }
-}
+export const postGasto = asyncHandler(async (req, res) => {
+  const datos = await crearGastoSchema.validateAsync(req.body);
+  const gasto = await gastoService.crear(req.usuarioId, datos);
+  res.status(201).json(gasto);
+});
 
-export async function patchMarcarPagado(req, res, next) {
-  try {
-    const gasto = await gastoService.marcarPagado(req.usuarioId, req.params.id);
-    res.status(200).json(gasto);
-  } catch (err) {
-    next(err);
-  }
-}
+export const patchMarcarPagado = asyncHandler(async (req, res) => {
+  const gasto = await gastoService.marcarPagado(req.usuarioId, req.params.id);
+  res.status(200).json(gasto);
+});
+
+export const putGasto = asyncHandler(async (req, res) => {
+  const datos = await crearGastoSchema.validateAsync(req.body);
+  const gasto = await gastoService.actualizar(req.usuarioId, req.params.id, datos);
+  res.status(200).json(gasto);
+});
