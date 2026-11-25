@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { BottomNav } from "./BottomNav";
 import { FAB } from "./FAB";
 import { QuickAddModal } from "../quickadd/QuickAddModal";
+import { useAppData } from "../../context/AppDataContext";
 import { BrandBar } from "./BrandBar";
 
 export interface AbonoOrigen {
@@ -21,6 +22,7 @@ export interface ShellContext {
 
 export function AppShell() {
   const [modalAbierto, setModalAbierto] = useState(false);
+  const { errorCarga, recargarDatos } = useAppData();
   const [tabInicial, setTabInicial] = useState<"gasto" | "ingreso" | "abono">("gasto");
   const [origenAbono, setOrigenAbono] = useState<AbonoOrigen | undefined>(undefined);
 
@@ -43,6 +45,13 @@ export function AppShell() {
           <div className="md:hidden">
             <BrandBar />
           </div>
+          {errorCarga && (
+            <div role="alert" className="mx-4 mt-4 rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger md:mx-8">
+              <p className="font-semibold">No pudimos cargar tus datos</p>
+              <p className="mt-1 text-xs">{errorCarga}</p>
+              <button onClick={recargarDatos} className="mt-2 rounded-lg bg-danger px-3 py-1.5 text-xs font-semibold text-surface">Reintentar</button>
+            </div>
+          )}
           <div className="no-scrollbar flex-1 overflow-y-auto pb-24 md:pb-8">
             <Outlet context={context} />
           </div>

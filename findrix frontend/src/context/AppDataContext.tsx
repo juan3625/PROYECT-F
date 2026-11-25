@@ -51,6 +51,8 @@ interface AppDataContextValue {
   balanceMes: number;
   proximosAVencer: Gasto[];
   cargando: boolean;
+  errorCarga: string | null;
+  recargarDatos: () => void;
   agregarGasto: (input: NuevoGastoInput) => Promise<void>;
   agregarIngreso: (input: NuevoIngresoInput) => Promise<void>;
   abonarMeta: (metaId: string, monto: number) => Promise<void>;
@@ -92,6 +94,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [metasAhorro, setMetasAhorro] = useState<MetaAhorro[]>([]);
   const [prestamos, setPrestamos] = useState<Prestamo[]>([]);
   const [cargando, setCargando] = useState(true);
+  const [errorCarga, setErrorCarga] = useState<string | null>(null);
+  const [intentoCarga, setIntentoCarga] = useState(0);
 
   // Carga inicial: las 5 listas en paralelo contra el backend real.
   useEffect(() => {
@@ -99,6 +103,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     let cancelado = false;
 
     setCargando(true);
+    setErrorCarga(null);
     Promise.all([
       apiFetch<Categoria[]>("/categorias", {}, token),
       apiFetch<Gasto[]>("/gastos", {}, token),
@@ -115,9 +120,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         setPrestamos(prest);
       })
       .catch((err) => {
-        // Si falla la carga inicial (ej. backend caído), lo dejamos en
-        // consola — las pantallas simplemente ven listas vacías.
         console.error("No se pudieron cargar los datos de Findrix:", err);
+        setErrorCarga(err instanceof Error ? err.message : "No se pudieron cargar tus datos.");
       })
       .finally(() => {
         if (!cancelado) setCargando(false);
@@ -126,7 +130,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelado = true;
     };
-  }, [token]);
+  }, [token, intentoCarga]);
 
   const categoriaPorId = (catId: string) => categorias.find((c) => c.id === catId);
 
@@ -241,6 +245,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     balanceMes,
     proximosAVencer,
     cargando,
+    errorCarga,
+    recargarDatos: () => setIntentoCarga((valor) => valor + 1),
     agregarGasto,
     agregarIngreso,
     abonarMeta,
