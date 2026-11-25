@@ -1,0 +1,11 @@
+{
+  "name": "proyect-f",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix \"findrix frontend\" && npm install --prefix findrix_backend",
+    "dev": "npm run dev:frontend",
+    "dev:frontend": "npm --prefix \"findrix frontend\" run dev",
+    "dev:backend": "npm --prefix findrix_backend run dev",
+    "build:frontend": "npm --prefix \"findrix frontend\" run build"
+  }
+}
