@@ -6,6 +6,7 @@ import { formatoMoneda, etiquetaVencimiento } from "../utils/format";
 import { ProgressBar } from "../components/ui/ProgressBar";
 import type { ShellContext } from "../components/layout/AppShell";
 import findrixIcon from "../assets/findrix-icon.png";
+import { EmptyState } from "../components/ui/EmptyState";
 
 export function InicioPage() {
   const { balanceMes, totalIngresosMes, totalGastosMes, proximosAVencer, metasAhorro } =
@@ -33,8 +34,9 @@ export function InicioPage() {
           className="pointer-events-none absolute -right-30 -top-30 h-80 w-80 object-contain opacity-20"
             />
         <p className="text-xs font-medium uppercase tracking-wide text-secondary">
-          Balance de {mesActual()}
+          Disponible este mes
         </p>
+        <p className="mt-1 text-xs text-secondary/80">Ingresos menos gastos registrados</p>
         <p className="mt-1 font-display text-3xl">{formatoMoneda(balanceMes)}</p>
         <div className="mt-4 flex gap-6">
           <div>
@@ -81,7 +83,7 @@ export function InicioPage() {
         )}
       </div>
 
-      {metaDestacada && (
+      {metaDestacada ? (
         <div>
           <p className="mb-2 text-sm font-semibold text-primary-dark">Metas de ahorro</p>
           <button
@@ -99,6 +101,12 @@ export function InicioPage() {
             <ProgressBar valor={metaDestacada.montoActual / metaDestacada.montoMeta} />
           </button>
         </div>
+      ) : (
+        <EmptyState
+          titulo="Empieza una meta de ahorro"
+          descripcion="Define un objetivo para darle dirección a tu dinero."
+          accion={<button onClick={() => abrirRegistro({ tab: "abono" })} className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-surface">Ver opciones de registro</button>}
+        />
       )}
     </div>
   );
