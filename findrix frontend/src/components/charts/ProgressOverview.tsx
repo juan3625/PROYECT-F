@@ -1,6 +1,7 @@
 import type { MetaAhorro, Prestamo } from "../../types";
 import { formatoMoneda } from "../../utils/format";
 import { ProgressBar } from "../ui/ProgressBar";
+import { ChartEmptyState } from "./ChartEmptyState";
 
 function porcentaje(actual: number, total: number) {
   return total > 0 ? Math.min(1, Math.max(0, actual / total)) : 0;
@@ -39,10 +40,10 @@ export function ProgressOverview({
         <p className="text-xs text-neutral">Metas de ahorro y préstamos en seguimiento</p>
       </div>
       {elementos.length === 0 ? (
-        <div className="rounded-xl bg-base-soft px-5 py-6 text-center">
-          <p className="text-sm font-semibold text-primary-dark">No hay metas ni préstamos todavía</p>
-          <p className="mt-1 text-xs text-neutral">Crea uno para ver aquí cuánto llevas y cuánto falta.</p>
-        </div>
+        <ChartEmptyState
+          titulo="No hay metas ni préstamos todavía"
+          descripcion="Crea uno para ver aquí cuánto llevas y cuánto falta."
+        />
       ) : (
         <div className="flex flex-col gap-4">
           {elementos.slice(0, 5).map((elemento) => {
