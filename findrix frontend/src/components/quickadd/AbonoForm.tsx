@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FeedbackMessage } from "../ui/FeedbackMessage";
 import { useAppData } from "../../context/AppDataContext";
 import { Icon } from "../ui/Icon";
 import { formatoMoneda } from "../../utils/format";
@@ -34,6 +35,8 @@ export function AbonoForm({
 
   const [itemId, setItemId] = useState(origen?.id ?? items[0]?.id ?? "");
   const [monto, setMonto] = useState("");
+  const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const cambiarTipo = (nuevoTipo: "ahorro" | "prestamo") => {
     setTipo(nuevoTipo);
@@ -44,13 +47,21 @@ export function AbonoForm({
   const item = items.find((i) => i.id === itemId);
   const puedeGuardar = Number(monto) > 0 && itemId;
 
-  const guardar = () => {
-    if (tipo === "ahorro") {
-      abonarMeta(itemId, Number(monto));
-    } else {
-      abonarPrestamo(itemId, Number(monto));
+  const guardar = async () => {
+    setGuardando(true);
+    setError(null);
+    try {
+      if (tipo === "ahorro") {
+        await abonarMeta(itemId, Number(monto));
+      } else {
+        await abonarPrestamo(itemId, Number(monto));
+      }
+      onListo();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo registrar el abono.");
+    } finally {
+      setGuardando(false);
     }
-    onListo();
   };
 
   return (
@@ -105,8 +116,13 @@ export function AbonoForm({
 
       <div className="text-center">
         <p className="mb-1 text-xs font-medium uppercase tracking-wide text-neutral">
-          Abono a {item?.nombre ?? (tipo === "ahorro" ? "meta" : "préstamo")}
+          {tipo === "ahorro" ? "Agregar dinero a" : "Registrar pago para"} {item?.nombre ?? (tipo === "ahorro" ? "la meta" : "el préstamo")}
         </p>
+        {item && (
+          <p className="mb-2 text-xs text-neutral">
+            Falta {formatoMoneda(Math.max(0, item.montoTotal - item.montoActual))} para completar
+          </p>
+        )}
         <div className="flex items-center justify-center gap-1">
           <span className="font-display text-3xl text-primary-dark">$</span>
           <input
@@ -119,12 +135,14 @@ export function AbonoForm({
         </div>
       </div>
 
+      {error && <FeedbackMessage tipo="error">{error}</FeedbackMessage>}
+
       <button
         onClick={guardar}
-        disabled={!puedeGuardar}
+        disabled={!puedeGuardar || guardando}
         className="rounded-xl bg-primary py-3 text-sm font-semibold text-surface transition-opacity disabled:opacity-40"
       >
-        Abonar
+        {guardando ? "Guardando…" : tipo === "ahorro" ? "Agregar dinero" : "Registrar pago"}
       </button>
     </div>
   );
