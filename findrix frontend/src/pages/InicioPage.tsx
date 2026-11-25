@@ -1,5 +1,5 @@
 import { UserCircle2, AlertTriangle, Clock } from "lucide-react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useAppData } from "../context/AppDataContext";
 import { useAuth } from "../context/AuthContext";
 import { formatoMoneda, etiquetaVencimiento } from "../utils/format";
@@ -13,6 +13,7 @@ export function InicioPage() {
     useAppData();
   const { usuario } = useAuth();
   const { abrirRegistro } = useOutletContext<ShellContext>();
+  const navigate = useNavigate();
 
   const primerNombre = usuario!.nombre.split(" ")[0];
   const metaDestacada = metasAhorro[metasAhorro.length - 1];
@@ -105,7 +106,7 @@ export function InicioPage() {
         <EmptyState
           titulo="Empieza una meta de ahorro"
           descripcion="Define un objetivo para darle dirección a tu dinero."
-          accion={<button onClick={() => abrirRegistro({ tab: "abono" })} className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-surface">Ver opciones de registro</button>}
+          accion={<button onClick={() => navigate("/metas")} className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-surface">Crear meta de ahorro</button>}
         />
       )}
     </div>
