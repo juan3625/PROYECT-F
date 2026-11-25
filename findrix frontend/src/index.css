@@ -33,6 +33,7 @@
 
 html.text-large {
   --font-scale: 1.1;
+  font-size: 110%;
 }
 
 html.theme-dark {
@@ -73,10 +74,6 @@ html.theme-accent-oro {
 html.theme-accent-cobre {
   --color-primary: #8c4a32;
   --color-danger: #9c4a2e;
-}
-
-html.text-large body {
-  font-size: 1.1rem;
 }
 
 html,
