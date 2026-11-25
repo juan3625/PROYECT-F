@@ -15,7 +15,7 @@ export function MetasPage() {
   const [creando, setCreando] = useState(false);
 
   return (
-    <div className="flex flex-col gap-5 px-5 pt-6">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-5 pt-6 sm:px-8 lg:px-10">
       <p className="font-display text-xl text-primary-dark">Metas</p>
 
       <div className="flex gap-2 rounded-xl bg-base-soft p-1">
@@ -37,7 +37,7 @@ export function MetasPage() {
         </button>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
         {tab === "ahorros"
           ? metasAhorro.map((m) => (
               <MetaCard
