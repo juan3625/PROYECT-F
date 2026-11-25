@@ -7,10 +7,10 @@ import type { AbonoOrigen } from "../layout/AppShell";
 
 type Tab = "gasto" | "ingreso" | "abono";
 
-const tabs: { id: Tab; label: string }[] = [
-  { id: "gasto", label: "Gasto" },
-  { id: "ingreso", label: "Ingreso" },
-  { id: "abono", label: "Abono" },
+const tabs: { id: Tab; label: string; ayuda: string }[] = [
+  { id: "gasto", label: "Registrar gasto", ayuda: "Dinero que sale" },
+  { id: "ingreso", label: "Registrar ingreso", ayuda: "Dinero que entra" },
+  { id: "abono", label: "Agregar o pagar", ayuda: "Meta o préstamo" },
 ];
 
 export function QuickAddModal({
@@ -34,7 +34,9 @@ export function QuickAddModal({
 
   return (
     <Sheet abierto={abierto} onCerrar={onCerrar}>
-      <div className="mb-4 flex gap-2">
+      <div className="mb-4">
+        <p className="mb-3 font-display text-lg text-primary-dark">¿Qué quieres registrar?</p>
+        <div className="flex gap-2">
         {tabs.map((t) => (
           <button
             key={t.id}
@@ -45,9 +47,11 @@ export function QuickAddModal({
                 : "bg-base-soft text-neutral"
             }`}
           >
-            {t.label}
+            <span>{t.label}</span>
+            <span className="mt-0.5 block text-[10px] font-normal opacity-80">{t.ayuda}</span>
           </button>
         ))}
+        </div>
       </div>
 
       {tab === "gasto" && <GastoForm onListo={onCerrar} />}
