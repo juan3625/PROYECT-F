@@ -26,13 +26,15 @@ export function CategoryExpensesChart({
     totales.set(gasto.categoriaId, (totales.get(gasto.categoriaId) ?? 0) + gasto.monto);
   }
 
-  const data = Array.from(totales.entries())
+  const ordenados = Array.from(totales.entries())
     .map(([categoriaId, total]) => ({
       nombre: categorias.find((categoria) => categoria.id === categoriaId)?.nombre ?? "Otro",
       total,
     }))
-    .sort((a, b) => b.total - a.total)
-    .slice(0, 6);
+    .sort((a, b) => b.total - a.total);
+  const visibles = ordenados.slice(0, 6);
+  const totalOtros = ordenados.slice(6).reduce((total, item) => total + item.total, 0);
+  const data = totalOtros > 0 ? [...visibles, { nombre: "Otros", total: totalOtros }] : visibles;
 
   return (
     <section className="rounded-2xl border border-secondary/40 bg-surface p-4" aria-label="Gastos por categoría">
