@@ -9,6 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import { formatoMoneda } from "../../utils/format";
+import { ChartEmptyState } from "./ChartEmptyState";
 
 export function MonthlyOverviewChart({
   ingresos,
@@ -27,12 +28,10 @@ export function MonthlyOverviewChart({
         <p className="text-xs text-neutral">Comparación del mes actual</p>
       </div>
       {!hayDatos ? (
-        <div className="flex min-h-52 items-center justify-center rounded-xl bg-base-soft px-5 text-center">
-          <div>
-            <p className="text-sm font-semibold text-primary-dark">Aún no hay movimientos del mes</p>
-            <p className="mt-1 text-xs text-neutral">Registra un ingreso o un gasto para ver la comparación.</p>
-          </div>
-        </div>
+        <ChartEmptyState
+          titulo="Aún no hay movimientos del mes"
+          descripcion="Registra un ingreso o un gasto para ver la comparación."
+        />
       ) : (
         <div className="h-56 w-full" role="img" aria-label={`Ingresos ${formatoMoneda(ingresos)} y gastos ${formatoMoneda(gastos)}`}>
           <ResponsiveContainer width="100%" height="100%">
