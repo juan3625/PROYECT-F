@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FeedbackMessage } from "../ui/FeedbackMessage";
 import { useAppData } from "../../context/AppDataContext";
 import { Icon, iconosCategoria } from "../ui/Icon";
 
@@ -7,12 +8,22 @@ export function NuevaCategoriaForm({ onListo }: { onListo: () => void }) {
   const [nombre, setNombre] = useState("");
   const [tipo, setTipo] = useState<"gasto" | "ingreso">("gasto");
   const [icono, setIcono] = useState(iconosCategoria[0]);
+  const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const puedeGuardar = nombre.trim().length > 0;
 
-  const guardar = () => {
-    agregarCategoria({ nombre: nombre.trim(), tipo, icono });
-    onListo();
+  const guardar = async () => {
+    setGuardando(true);
+    setError(null);
+    try {
+      await agregarCategoria({ nombre: nombre.trim(), tipo, icono });
+      onListo();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo guardar la categoría.");
+    } finally {
+      setGuardando(false);
+    }
   };
 
   return (
@@ -28,7 +39,7 @@ export function NuevaCategoriaForm({ onListo }: { onListo: () => void }) {
       />
 
       <div>
-        <p className="mb-2 text-sm font-semibold text-primary-dark">Tipo</p>
+        <p className="mb-2 text-sm font-semibold text-primary-dark">¿Dónde la usarás?</p>
         <div className="flex gap-2 rounded-xl bg-base-soft p-1">
           <button
             onClick={() => setTipo("gasto")}
@@ -69,12 +80,14 @@ export function NuevaCategoriaForm({ onListo }: { onListo: () => void }) {
         </div>
       </div>
 
+      {error && <FeedbackMessage tipo="error">{error}</FeedbackMessage>}
+
       <button
         onClick={guardar}
-        disabled={!puedeGuardar}
+        disabled={!puedeGuardar || guardando}
         className="rounded-xl bg-primary py-3 text-sm font-semibold text-surface transition-opacity disabled:opacity-40"
       >
-        Guardar categoría
+        {guardando ? "Guardando…" : "Guardar categoría"}
       </button>
     </div>
   );
