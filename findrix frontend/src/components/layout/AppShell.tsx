@@ -34,19 +34,29 @@ export function AppShell() {
 
   return (
     <div className="min-h-screen bg-base-soft">
-      <div className="relative flex min-h-screen flex-col bg-base">
-        <BrandBar />
-        <div className="no-scrollbar flex-1 overflow-y-auto pb-24">
-          <Outlet context={context} />
-        </div>
-        <FAB onClick={() => abrirRegistro()} />
-        <BottomNav />
-        <QuickAddModal
-          abierto={modalAbierto}
-          onCerrar={() => setModalAbierto(false)}
-          tabInicial={tabInicial}
-          origenAbono={origenAbono}
-        />
+      <div className="mx-auto flex min-h-screen w-full max-w-7xl bg-base md:my-6 md:min-h-[calc(100vh-3rem)] md:overflow-hidden md:rounded-3xl md:shadow-xl">
+        <aside className="hidden w-60 shrink-0 flex-col border-r border-secondary/30 bg-surface md:flex">
+          <BrandBar />
+          <BottomNav variante="sidebar" />
+        </aside>
+        <main className="relative flex min-w-0 flex-1 flex-col">
+          <div className="md:hidden">
+            <BrandBar />
+          </div>
+          <div className="no-scrollbar flex-1 overflow-y-auto pb-24 md:pb-8">
+            <Outlet context={context} />
+          </div>
+          <FAB onClick={() => abrirRegistro()} />
+          <div className="md:hidden">
+            <BottomNav />
+          </div>
+          <QuickAddModal
+            abierto={modalAbierto}
+            onCerrar={() => setModalAbierto(false)}
+            tabInicial={tabInicial}
+            origenAbono={origenAbono}
+          />
+        </main>
       </div>
     </div>
   );
