@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FeedbackMessage } from "../ui/FeedbackMessage";
 import { useAppData } from "../../context/AppDataContext";
 import { Icon, iconosCategoria } from "../ui/Icon";
 
@@ -15,26 +16,36 @@ export function NuevaMetaForm({
   const [fechaMeta, setFechaMeta] = useState("");
   const [tipoPrestamo, setTipoPrestamo] = useState<"presto" | "debo">("debo");
   const [icono, setIcono] = useState(iconosCategoria[0]);
+  const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const puedeGuardar = nombre.trim().length > 0 && Number(monto) > 0;
 
-  const guardar = () => {
-    if (tipoInicial === "ahorro") {
-      crearMeta({
+  const guardar = async () => {
+    setGuardando(true);
+    setError(null);
+    try {
+      if (tipoInicial === "ahorro") {
+        await crearMeta({
         nombre: nombre.trim(),
         montoMeta: Number(monto),
         fechaMeta: fechaMeta || undefined,
         icono,
-      });
-    } else {
-      crearPrestamo({
+        });
+      } else {
+        await crearPrestamo({
         nombre: nombre.trim(),
         montoTotal: Number(monto),
         tipo: tipoPrestamo,
         icono,
-      });
+        });
+      }
+      onListo();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo guardar la información.");
+    } finally {
+      setGuardando(false);
     }
-    onListo();
   };
 
   return (
@@ -46,7 +57,7 @@ export function NuevaMetaForm({
       <input
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
-        placeholder={tipoInicial === "ahorro" ? "Nombre de la meta" : "Nombre (ej. Préstamo a Juan)"}
+        placeholder={tipoInicial === "ahorro" ? "Nombre de la meta" : "Persona o motivo (ej. Juan)"}
         autoFocus
         className="rounded-xl border border-secondary/50 bg-base-soft px-4 py-2.5 text-sm text-primary-dark outline-none placeholder:text-neutral focus:border-primary"
       />
@@ -59,7 +70,8 @@ export function NuevaMetaForm({
               tipoPrestamo === "debo" ? "bg-surface text-primary-dark shadow-sm" : "text-neutral"
             }`}
           >
-            Yo debo
+            <span>Yo debo</span>
+            <span className="block text-[10px] font-normal">Le debo a alguien</span>
           </button>
           <button
             onClick={() => setTipoPrestamo("presto")}
@@ -67,7 +79,8 @@ export function NuevaMetaForm({
               tipoPrestamo === "presto" ? "bg-surface text-primary-dark shadow-sm" : "text-neutral"
             }`}
           >
-            Me deben
+            <span>Me deben</span>
+            <span className="block text-[10px] font-normal">Alguien me debe</span>
           </button>
         </div>
       )}
@@ -120,12 +133,14 @@ export function NuevaMetaForm({
         </div>
       </div>
 
+      {error && <FeedbackMessage tipo="error">{error}</FeedbackMessage>}
+
       <button
         onClick={guardar}
-        disabled={!puedeGuardar}
+        disabled={!puedeGuardar || guardando}
         className="rounded-xl bg-primary py-3 text-sm font-semibold text-surface transition-opacity disabled:opacity-40"
       >
-        Guardar
+        {guardando ? "Guardando…" : tipoInicial === "ahorro" ? "Crear meta" : "Registrar préstamo"}
       </button>
     </div>
   );
