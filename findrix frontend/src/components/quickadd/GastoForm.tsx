@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FeedbackMessage } from "../ui/FeedbackMessage";
 import { useAppData } from "../../context/AppDataContext";
 import { Icon } from "../ui/Icon";
 import type { PrioridadGasto } from "../../types";
@@ -24,19 +25,29 @@ export function GastoForm({ onListo }: { onListo: () => void }) {
   const [esPendiente, setEsPendiente] = useState(false);
   const [prioridad, setPrioridad] = useState<PrioridadGasto>("media");
   const [fechaVencimiento, setFechaVencimiento] = useState("");
+  const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const puedeGuardar = Number(monto) > 0 && categoriaId && (!esPendiente || fechaVencimiento);
 
-  const guardar = () => {
-    agregarGasto({
+  const guardar = async () => {
+    setGuardando(true);
+    setError(null);
+    try {
+      await agregarGasto({
       monto: Number(monto),
       descripcion: descripcion.trim() || categoriasGasto.find((c) => c.id === categoriaId)?.nombre || "Gasto",
       categoriaId,
       esPagoPendiente: esPendiente,
       prioridad,
       fechaVencimiento: esPendiente ? fechaVencimiento : undefined,
-    });
-    onListo();
+      });
+      onListo();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo guardar el gasto.");
+    } finally {
+      setGuardando(false);
+    }
   };
 
   return (
@@ -58,7 +69,7 @@ export function GastoForm({ onListo }: { onListo: () => void }) {
       <input
         value={descripcion}
         onChange={(e) => setDescripcion(e.target.value)}
-        placeholder="Descripción (opcional)"
+        placeholder="Descripción (opcional, ej. mercado o transporte)"
         className="rounded-xl border border-secondary/50 bg-base-soft px-4 py-2.5 text-sm text-primary-dark outline-none placeholder:text-neutral focus:border-primary"
       />
 
@@ -88,7 +99,7 @@ export function GastoForm({ onListo }: { onListo: () => void }) {
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="text-sm text-primary-dark">¿Es un pago pendiente?</span>
+        <span className="text-sm text-primary-dark">¿Este gasto aún está pendiente de pago?</span>
         <button
           role="switch"
           aria-checked={esPendiente}
@@ -140,12 +151,14 @@ export function GastoForm({ onListo }: { onListo: () => void }) {
         </div>
       )}
 
+      {error && <FeedbackMessage tipo="error">{error}</FeedbackMessage>}
+
       <button
         onClick={guardar}
-        disabled={!puedeGuardar}
+        disabled={!puedeGuardar || guardando}
         className="rounded-xl bg-primary py-3 text-sm font-semibold text-surface transition-opacity disabled:opacity-40"
       >
-        Guardar gasto
+        {guardando ? "Guardando…" : "Guardar gasto"}
       </button>
     </div>
   );
