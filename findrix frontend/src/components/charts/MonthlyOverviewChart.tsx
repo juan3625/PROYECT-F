@@ -11,6 +11,12 @@ import {
 import { formatoMoneda } from "../../utils/format";
 import { ChartEmptyState } from "./ChartEmptyState";
 
+function etiquetaEje(valor: number) {
+  if (valor === 0) return "$0";
+  if (valor < 1000) return `$${valor}`;
+  return `$${Math.round(valor / 1000)}k`;
+}
+
 export function MonthlyOverviewChart({
   ingresos,
   gastos,
@@ -38,7 +44,7 @@ export function MonthlyOverviewChart({
             <BarChart data={data} margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0b99b" opacity={0.45} />
               <XAxis dataKey="nombre" tick={{ fill: "#7d7d6f", fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "#7d7d6f", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(valor) => `$${Math.round(valor / 1000)}k`} />
+              <YAxis tick={{ fill: "#7d7d6f", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(valor) => etiquetaEje(Number(valor))} />
               <Tooltip formatter={(valor) => formatoMoneda(Number(valor))} contentStyle={{ borderRadius: 12, borderColor: "#e0b99b" }} />
               <Legend wrapperStyle={{ fontSize: 12, color: "#5f4b32" }} />
               <Bar name="Ingresos" dataKey="ingresos" fill="#6a8d73" radius={[6, 6, 0, 0]} />

@@ -14,6 +14,12 @@ import { ChartEmptyState } from "./ChartEmptyState";
 
 const colores = ["#b85c38", "#c19a6b", "#6a8d73", "#9c4a2e", "#5f4b32", "#e0b99b"];
 
+function etiquetaEje(valor: number) {
+  if (valor === 0) return "$0";
+  if (valor < 1000) return `$${valor}`;
+  return `$${Math.round(valor / 1000)}k`;
+}
+
 export function CategoryExpensesChart({
   gastos,
   categorias,
@@ -52,7 +58,7 @@ export function CategoryExpensesChart({
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} layout="vertical" margin={{ top: 4, right: 12, left: 8, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0b99b" opacity={0.35} horizontal={false} />
-              <XAxis type="number" tick={{ fill: "#7d7d6f", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(valor) => `$${Math.round(valor / 1000)}k`} />
+              <XAxis type="number" tick={{ fill: "#7d7d6f", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(valor) => etiquetaEje(Number(valor))} />
               <YAxis type="category" dataKey="nombre" width={82} tick={{ fill: "#5f4b32", fontSize: 11 }} axisLine={false} tickLine={false} />
               <Tooltip formatter={(valor) => formatoMoneda(Number(valor))} contentStyle={{ borderRadius: 12, borderColor: "#e0b99b" }} />
               <Bar name="Gastos" dataKey="total" fill="#b85c38" radius={[0, 6, 6, 0]}>{data.map((item, indice) => <Cell key={item.nombre} fill={colores[indice % colores.length]} />)}</Bar>
