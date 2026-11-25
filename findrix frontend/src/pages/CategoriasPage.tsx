@@ -4,6 +4,7 @@ import { SubPageHeader } from "../components/ui/SubPageHeader";
 import { Icon } from "../components/ui/Icon";
 import { Sheet } from "../components/ui/Sheet";
 import { NuevaCategoriaForm } from "../components/categorias/NuevaCategoriaForm";
+import { EmptyState } from "../components/ui/EmptyState";
 
 export function CategoriasPage() {
   const { categorias } = useAppData();
@@ -15,8 +16,16 @@ export function CategoriasPage() {
     <div className="flex flex-col gap-5 pb-4">
       <SubPageHeader titulo="Categorías" />
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-5 sm:px-8 lg:px-10">
-        <Bloque titulo="Gastos" items={gasto} />
-        <Bloque titulo="Ingresos" items={ingreso} />
+        {gasto.length > 0 ? (
+          <Bloque titulo="Gastos" items={gasto} />
+        ) : (
+          <EmptyState titulo="No hay categorías de gastos" descripcion="Crea una para clasificar mejor tus gastos." accion={<button onClick={() => setAbierto(true)} className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-surface">Crear categoría</button>} />
+        )}
+        {ingreso.length > 0 ? (
+          <Bloque titulo="Ingresos" items={ingreso} />
+        ) : (
+          <EmptyState titulo="No hay categorías de ingresos" descripcion="Crea una para organizar el dinero que recibes." accion={<button onClick={() => setAbierto(true)} className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-surface">Crear categoría</button>} />
+        )}
         <button
           onClick={() => setAbierto(true)}
           className="rounded-xl border border-dashed border-primary/60 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
