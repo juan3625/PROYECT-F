@@ -24,7 +24,7 @@ export function ReportesPage() {
   return (
     <div className="flex flex-col gap-5 pb-4">
       <SubPageHeader titulo="Reportes" />
-      <div className="flex flex-col gap-4 px-5">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-5 sm:px-8 lg:px-10">
         <p className="text-sm text-neutral">Gastos por categoría este mes</p>
         <div className="flex flex-col gap-4">
           {porCategoria.map(({ categoria, total }) => (
