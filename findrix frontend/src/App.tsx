@@ -3,6 +3,8 @@ import { AppShell } from "./components/layout/AppShell";
 import { RequireAuth } from "./components/auth/RequireAuth";
 import { LoginPage } from "./pages/LoginPage";
 import { RegistroPage } from "./pages/RegistroPage";
+import { OlvideContrasenaPage } from "./pages/OlvideContrasenaPage";
+import { RestablecerContrasenaPage } from "./pages/RestablecerContrasenaPage";
 import { InicioPage } from "./pages/InicioPage";
 import { MovimientosPage } from "./pages/MovimientosPage";
 import { MetasPage } from "./pages/MetasPage";
@@ -18,6 +20,8 @@ function App() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/registro" element={<RegistroPage />} />
+      <Route path="/olvide-contrasena" element={<OlvideContrasenaPage />} />
+      <Route path="/restablecer-contrasena" element={<RestablecerContrasenaPage />} />
 
       <Route element={<RequireAuth />}>
         <Route element={<AppShell />}>

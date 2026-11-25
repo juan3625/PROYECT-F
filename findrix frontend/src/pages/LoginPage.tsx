@@ -71,6 +71,12 @@ export function LoginPage() {
             Regístrate
           </Link>
         </p>
+
+        <p className="text-center text-xs text-neutral">
+          <Link to="/olvide-contrasena" className="font-semibold text-primary">
+            ¿Olvidaste tu contraseña?
+          </Link>
+        </p>
       </form>
     </AuthShell>
   );
