@@ -5,6 +5,7 @@ import { gastoRoutes } from "./gasto.routes.js";
 import { ingresoRoutes } from "./ingreso.routes.js";
 import { metaAhorroRoutes } from "./metaAhorro.routes.js";
 import { prestamoRoutes } from "./prestamo.routes.js";
+import { notificacionRoutes } from "./notificacion.routes.js";
 import { requiereAuth } from "../middlewares/auth.js";
 
 export const apiRoutes = Router();
@@ -17,3 +18,4 @@ apiRoutes.use("/gastos", requiereAuth, gastoRoutes);
 apiRoutes.use("/ingresos", requiereAuth, ingresoRoutes);
 apiRoutes.use("/metas-ahorro", requiereAuth, metaAhorroRoutes);
 apiRoutes.use("/prestamos", requiereAuth, prestamoRoutes);
+apiRoutes.use("/notificaciones", requiereAuth, notificacionRoutes);

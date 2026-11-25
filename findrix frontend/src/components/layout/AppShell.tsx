@@ -6,6 +6,7 @@ import { QuickAddModal } from "../quickadd/QuickAddModal";
 import { useAppData } from "../../context/AppDataContext";
 import { BrandBar } from "./BrandBar";
 import { FinancialNotifications } from "../notifications/FinancialNotifications";
+import { usePushNotifications } from "../../hooks/usePushNotifications";
 
 export interface AbonoOrigen {
   tipo: "ahorro" | "prestamo";
@@ -22,6 +23,7 @@ export interface ShellContext {
 }
 
 export function AppShell() {
+  usePushNotifications();
   const [modalAbierto, setModalAbierto] = useState(false);
   const { errorCarga, recargarDatos } = useAppData();
   const [tabInicial, setTabInicial] = useState<"gasto" | "ingreso" | "abono">("gasto");
