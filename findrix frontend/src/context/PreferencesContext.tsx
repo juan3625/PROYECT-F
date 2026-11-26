@@ -32,6 +32,12 @@ const valoresIniciales: Preferencias = {
   diasAnticipacion: 1,
 };
 
+function claseTema(tema: Tema) {
+  if (tema === "oscuro") return "theme-dark";
+  if (tema === "automatico") return "theme-auto";
+  return "theme-light";
+}
+
 const PreferencesContext = createContext<PreferencesContextValue | null>(null);
 
 function leerPreferencias(): Preferencias {
@@ -63,7 +69,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       "theme-light", "theme-dark", "theme-auto", "text-normal", "text-large",
       "theme-accent-terracota", "theme-accent-musgo", "theme-accent-oro", "theme-accent-cobre"
     );
-    html.classList.add(`theme-${preferencias.tema === "automatico" ? "auto" : preferencias.tema}`);
+    html.classList.add(claseTema(preferencias.tema));
     html.classList.add(`theme-accent-${preferencias.acento}`);
     html.classList.add(`text-${preferencias.tamanoTexto === "grande" ? "large" : "normal"}`);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(preferencias));
