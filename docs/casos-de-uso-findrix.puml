@@ -1,0 +1,68 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+
+actor "Visitante" as visitante
+actor "Usuario registrado" as usuario
+actor "Servicio de correo" as correo
+actor "Google Identity" as google
+actor "PostgreSQL" as db
+
+rectangle "FINDRIX" {
+  usecase "Registrarse" as UC1
+  usecase "Iniciar sesión" as UC2
+  usecase "Cerrar sesión" as UC3
+  usecase "Recuperar contraseña" as UC4
+  usecase "Consultar resumen" as UC5
+  usecase "Registrar gasto" as UC6
+  usecase "Registrar ingreso" as UC7
+  usecase "Consultar movimientos" as UC8
+  usecase "Gestionar categorías" as UC9
+  usecase "Gestionar metas de ahorro" as UC10
+  usecase "Gestionar préstamos y pagos" as UC11
+  usecase "Gestionar economía cash-first" as UC12
+  usecase "Consultar gráficas y reportes" as UC13
+  usecase "Personalizar preferencias" as UC14
+  usecase "Recibir notificaciones" as UC15
+}
+
+visitante --> UC1
+visitante --> UC2
+usuario --> UC2
+usuario --> UC3
+usuario --> UC4
+usuario --> UC5
+usuario --> UC6
+usuario --> UC7
+usuario --> UC8
+usuario --> UC9
+usuario --> UC10
+usuario --> UC11
+usuario --> UC12
+usuario --> UC13
+usuario --> UC14
+usuario --> UC15
+UC4 --> correo
+UC1 --> db
+UC2 --> db
+UC2 --> google : opcional
+UC4 --> db
+UC5 --> db
+UC6 --> db
+UC7 --> db
+UC8 --> db
+UC9 --> db
+UC10 --> db
+UC11 --> db
+UC12 --> db
+UC13 --> db
+UC15 --> correo
+
+note right of UC2
+La implementación existe en frontend y backend,
+pero el registro y el inicio de sesión en producción
+permanecen pendientes de validación reproducible.
+end note
+@enduml

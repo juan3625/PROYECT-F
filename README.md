@@ -321,3 +321,9 @@ Si se modifica una funcionalidad antes de la defensa, actualiza en este orden:
 - `findrix_backend/sql/README.md` — base de datos y migraciones.
 - `findrix_backend/sql/modelo_datos.png` — modelo visual de datos.
 - `docs/seguimiento-findrix.md` — fases del proyecto, fechas, comentarios y estado real de la aplicación.
+- `docs/product-backlog-findrix.docx` — Product Backlog en Word con PBI, historias de usuario y criterios de aceptación.
+- `docs/product-backlog-findrix.md` — fuente Markdown del Product Backlog.
+- `docs/casos-de-uso-findrix.puml` — casos de uso en PlantUML.
+- `docs/plan-de-pruebas-findrix.md` — Plan de Pruebas basado en la estructura de IEEE 29119-3.
+- `docs/matriz-trazabilidad-findrix.md` — requisitos, casos de prueba, criterios y responsables.
+- `findrix_backend/tests/auth.schema.test.js` — pruebas unitarias de los esquemas de autenticación.
