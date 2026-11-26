@@ -1,0 +1,83 @@
+erDiagram
+    USUARIO ||--o{ CATEGORIA : tiene
+    USUARIO ||--o{ GASTO : registra
+    USUARIO ||--o{ INGRESO : registra
+    USUARIO ||--o{ META_AHORRO : define
+    USUARIO ||--o{ PRESTAMO : administra
+    USUARIO ||--o{ RECUPERACION_CONTRASENA : solicita
+    USUARIO ||--o{ NOTIFICACION_SUSCRIPCION : registra
+    CATEGORIA ||--o{ GASTO : clasifica
+    CATEGORIA ||--o{ INGRESO : clasifica
+
+    USUARIO {
+      uuid id PK
+      text nombre
+      text correo UK
+      text contrasena_hash
+      text google_sub UK
+      boolean correo_verificado
+      timestamptz creado_en
+    }
+    CATEGORIA {
+      uuid id PK
+      uuid usuario_id FK
+      text nombre
+      text tipo
+      text icono
+      text color
+    }
+    GASTO {
+      uuid id PK
+      uuid usuario_id FK
+      uuid categoria_id FK
+      numeric monto
+      text descripcion
+      date fecha
+      boolean es_pago_pendiente
+      text estado
+      text prioridad
+      date fecha_vencimiento
+    }
+    INGRESO {
+      uuid id PK
+      uuid usuario_id FK
+      uuid categoria_id FK
+      numeric monto
+      text descripcion
+      date fecha
+    }
+    META_AHORRO {
+      uuid id PK
+      uuid usuario_id FK
+      text nombre
+      numeric monto_actual
+      numeric monto_meta
+      date fecha_meta
+      text icono
+    }
+    PRESTAMO {
+      uuid id PK
+      uuid usuario_id FK
+      text nombre
+      numeric monto_actual
+      numeric monto_total
+      text tipo
+      text icono
+    }
+    RECUPERACION_CONTRASENA {
+      uuid id PK
+      uuid usuario_id FK
+      text token_hash UK
+      timestamptz expira_en
+      timestamptz usado_en
+    }
+    NOTIFICACION_SUSCRIPCION {
+      uuid id PK
+      uuid usuario_id FK
+      text endpoint UK
+      text p256dh
+      text auth
+      integer dias_anticipacion
+      timestamptz creada_en
+      timestamptz actualizada_en
+    }

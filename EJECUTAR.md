@@ -1,44 +1,95 @@
 # Ejecutar Findrix
 
-Esta rama contiene el frontend y el backend en el mismo repositorio.
+Esta rama contiene la aplicación completa: frontend, backend y archivos SQL de la base de datos.
 
-## Instalación inicial
+## 1. Instalar dependencias
 
-Desde la carpeta raíz `PROYECT-F`:
+Desde la raíz del repositorio:
 
 ```bash
 npm run install:all
 ```
 
-Configura las variables reales del backend en `findrix_backend/.env`. Si todavía no existe:
+## 2. Preparar PostgreSQL
+
+Crea una base de datos llamada `findrix` desde pgAdmin.
+
+En una base nueva, ejecuta desde pgAdmin los siguientes archivos, en orden:
+
+```text
+findrix_backend/sql/schema.sql
+findrix_backend/sql/migrations/001_recuperacion_contrasena.sql
+findrix_backend/sql/migrations/002_auth_google.sql
+findrix_backend/sql/migrations/003_notificacion_suscripcion.sql
+findrix_backend/sql/migrations/004_integridad_app_actualizada.sql
+```
+
+Si la base ya contiene datos, no ejecutes `schema.sql` como actualización. Usa únicamente las migraciones pendientes.
+
+## 3. Configurar el backend
+
+Copia el archivo de ejemplo:
 
 ```bash
 cp findrix_backend/.env.example findrix_backend/.env
 ```
 
-Completa ese archivo con la configuración real de PostgreSQL, JWT y el puerto del entorno. No pongas claves inventadas en el repositorio.
+En PowerShell:
 
-## Ejecutar frontend y backend
+```powershell
+Copy-Item findrix_backend/.env.example findrix_backend/.env
+```
 
-Abre dos terminales, ambas ubicadas en la raíz `PROYECT-F`.
+Configura `DATABASE_URL`, `JWT_SECRET` y `FRONTEND_URL`. Google, SMTP y VAPID se agregan cuando se quieran probar esas funciones.
 
-Terminal 1, backend:
+## 4. Configurar el frontend
+
+Copia el archivo de entorno:
+
+```bash
+cp "findrix frontend/.env.example" "findrix frontend/.env"
+```
+
+En PowerShell:
+
+```powershell
+Copy-Item "findrix frontend/.env.example" "findrix frontend/.env"
+```
+
+El valor mínimo esperado es:
+
+```env
+VITE_API_URL=http://localhost:3000/api
+```
+
+## 5. Ejecutar backend y frontend
+
+Abre dos terminales en la raíz `PROYECT-F`.
+
+Terminal 1:
 
 ```bash
 npm run dev:backend
 ```
 
-Terminal 2, frontend:
+Terminal 2:
 
 ```bash
 npm run dev:frontend
 ```
 
-También puedes ejecutar `npm run dev` para iniciar solamente el frontend.
+Direcciones:
 
 - Frontend: `http://localhost:5173`
-- Backend/API: `http://localhost:3000/api`
+- Backend: `http://localhost:3000`
+- Swagger: `http://localhost:3000/api/docs`
 
-## Error común evitado por esta rama
+## 6. Comprobar la aplicación
 
-No ejecutes `npm run dev` desde `main` esperando que la raíz tenga el script. Tampoco uses `cd PROYECT-F/findrix_backend` si ya estás dentro de `PROYECT-F`; en ese caso la ruta correcta sería `cd findrix_backend`. Con los scripts raíz de esta rama no necesitas cambiar de carpeta.
+Prueba registro, inicio de sesión, categorías, movimientos, metas, préstamos, abonos, gráficas, ajustes, actualización de listas y recuperación de contraseña.
+
+Para validar el build:
+
+```bash
+npm run build:frontend
+```

@@ -1,227 +1,167 @@
-# Findrix Backend — Reorganización interna
+# Findrix — aplicación completa actualizada
 
-Este README documenta la reorganización interna aplicada al backend de Findrix. El objetivo fue separar responsabilidades y reducir la duplicación sin cambiar el contrato público de la API.
+Findrix es una aplicación web de finanzas personales con frontend React/Vite y backend Node/Express/PostgreSQL.
 
-## Qué se mantuvo igual
+## Funcionalidades incluidas
 
-La reorganización no cambia:
+- Registro e inicio de sesión con JWT y contraseñas protegidas con bcrypt.
+- Recuperación de contraseña mediante token de un solo uso.
+- Inicio de sesión y registro con Google Identity Services.
+- Diseño responsive para celular, tablet y computador.
+- Categorías, gastos, ingresos, metas de ahorro y préstamos.
+- Gráficas financieras en la pantalla de Inicio usando Recharts.
+- Ajustes de tema, color de acento y tamaño de texto.
+- Recordatorios financieros dentro de la aplicación.
+- Notificaciones del navegador y Web Push.
+- PWA con manifest y service worker.
+- Suscripciones por dispositivo y programador diario de notificaciones.
+- Esquema PostgreSQL y migraciones actualizadas.
 
-- Los endpoints ni sus métodos HTTP.
-- Los nombres de los campos de entrada y salida.
-- La estructura de las respuestas JSON.
-- Los códigos de estado HTTP.
-- Los mensajes de error existentes.
-- El aislamiento de datos por usuario.
-- Las reglas de negocio de gastos, categorías, metas, préstamos y abonos.
-- El esquema de PostgreSQL.
+## Requisitos
 
-El frontend debe seguir consumiendo las mismas rutas y respuestas.
+- Node.js y npm.
+- PostgreSQL con pgAdmin o `psql`.
+- Git.
+- Un navegador moderno.
 
-## Estructura actual
+## Instalación
 
-```text
-findrix_backend/
-├── .env.example
-├── .gitignore
-├── README.md
-├── package.json
-├── package-lock.json
-├── sql/
-│   └── schema.sql
-└── src/
-    ├── app.js
-    ├── server.js
-    ├── config/
-    │   └── db.js
-    ├── constants/
-    │   └── categorias.js
-    ├── controllers/
-    ├── middlewares/
-    ├── repositories/
-    │   ├── usuario.repository.js
-    │   ├── categoria.repository.js
-    │   ├── gasto.repository.js
-    │   ├── ingreso.repository.js
-    │   ├── metaAhorro.repository.js
-    │   └── prestamo.repository.js
-    ├── routes/
-    ├── schemas/
-    ├── services/
-    └── utils/
-        ├── asyncHandler.js
-        └── respuestas.js
+Desde la raíz del repositorio:
+
+```bash
+npm run install:all
 ```
 
-La carpeta `models/` fue eliminada porque no se utiliza. El acceso a datos está concentrado en `repositories/`.
+Este comando instala las dependencias del frontend y del backend.
 
-## Responsabilidad de cada capa
+## Base de datos
 
-### `config/`
-
-Contiene la configuración de infraestructura. `db.js` crea y exporta el pool de conexiones de PostgreSQL.
-
-### `constants/`
-
-Contiene valores constantes compartidos. `constants/categorias.js` define la paleta fija de colores para categorías:
-
-- Gastos: `primary`, `gold`, `danger`.
-- Ingresos: `green`, `primary`, `gold`.
-
-El color lo asigna el backend; el cliente no lo envía.
-
-### `routes/`
-
-Declara las rutas HTTP y conserva la documentación de Swagger. Las rutas conectan cada endpoint con su controller.
-
-### `controllers/`
-
-Representan la entrada y salida HTTP:
-
-1. Reciben la solicitud.
-2. Validan el cuerpo mediante un schema Joi.
-3. Llaman al service.
-4. Devuelven la respuesta con el mismo código y formato que antes.
-
-Los controllers ya no repiten bloques `try/catch`. Usan `asyncHandler` para enviar los errores al middleware global.
-
-### `schemas/`
-
-Contiene las validaciones Joi de los cuerpos recibidos por la API. Esta reorganización no cambia los campos ni las reglas de validación existentes.
-
-### `repositories/`
-
-Es la capa de acceso a datos. Hay un archivo por tabla o recurso persistido:
-
-- `usuario.repository.js`: búsquedas y creación de usuarios.
-- `categoria.repository.js`: conteo, búsqueda por usuario, listado, creación y actualización de categorías.
-- `gasto.repository.js`: listado, creación, actualización y marcado como pagado.
-- `ingreso.repository.js`: listado, creación y actualización de ingresos.
-- `metaAhorro.repository.js`: listado, creación, abonos y actualización de metas.
-- `prestamo.repository.js`: listado, creación, abonos y actualización de préstamos.
-
-Los repositories contienen:
-
-- Todo el SQL.
-- Los parámetros de las consultas.
-- Los filtros por `usuario_id`.
-- Las columnas de `SELECT` y `RETURNING`.
-- Los mapeos de filas PostgreSQL a los nombres camelCase de la API.
-
-Las listas de columnas repetidas se definen como constantes locales, por ejemplo `COLUMNAS_GASTO`, para reutilizarlas en `SELECT` y `RETURNING`.
-
-### `services/`
-
-Contiene las reglas de negocio y coordina repositories. Los services no deben importar `pool`, ejecutar `pool.query` ni contener mapeos de filas.
-
-Reglas que permanecen en esta capa:
-
-- Registro y login con bcrypt y JWT.
-- Asignación del color de las categorías.
-- Verificación de que una categoría pertenece al usuario autenticado.
-- Derivación del estado de un gasto: `pendiente` o `pagado`.
-- Marcado de gastos como pagados.
-- Manejo de recursos inexistentes con los mismos mensajes de error.
-- Coordinación de abonos a metas y préstamos.
-
-La verificación de propiedad de categorías está en `services/categoria.service.js` y se reutiliza desde los services de gastos e ingresos.
-
-### `middlewares/`
-
-Contiene autenticación, manejo global de errores y respuesta para rutas inexistentes.
-
-### `utils/`
-
-Contiene utilidades transversales:
-
-- `asyncHandler.js`: captura errores de funciones asíncronas de los controllers y los pasa a `errorHandler`.
-- `respuestas.js`: define `ErrorApi` y mantiene el formato `{ "error": "mensaje" }`.
-
-## Flujo de una solicitud
+Crea una base de datos llamada `findrix` desde pgAdmin o PostgreSQL. En una instalación nueva, ejecuta estos archivos en orden:
 
 ```text
-Ruta
-  ↓
-Controller
-  ↓
-Schema Joi
-  ↓
-Service
-  ↓
-Repository
-  ↓
-PostgreSQL
+findrix_backend/sql/schema.sql
+findrix_backend/sql/migrations/001_recuperacion_contrasena.sql
+findrix_backend/sql/migrations/002_auth_google.sql
+findrix_backend/sql/migrations/003_notificacion_suscripcion.sql
+findrix_backend/sql/migrations/004_integridad_app_actualizada.sql
 ```
 
-Los errores regresan por el flujo asíncrono hasta el middleware global:
+Si ya tienes una base de datos con información, no ejecutes `schema.sql` como actualización. Ejecuta solo las migraciones pendientes, especialmente `004_integridad_app_actualizada.sql`.
+
+La documentación detallada está en:
 
 ```text
-Error en cualquier capa
-  ↓
-asyncHandler
-  ↓
-errorHandler
-  ↓
-{ "error": "mensaje en español" }
+findrix_backend/sql/README.md
 ```
 
-## Seguridad de contraseñas y entorno
+El modelo visual está en:
 
-Las contraseñas siempre se almacenan con bcrypt usando 12 rondas. Se eliminó completamente la opción `GUARDAR_CONTRASENA_PLANA` y no debe agregarse nuevamente.
+```text
+findrix_backend/sql/modelo_datos.png
+```
 
-El backend necesita un `.env` local con variables como:
+## Variables del backend
+
+Copia el archivo de ejemplo:
+
+```bash
+cp findrix_backend/.env.example findrix_backend/.env
+```
+
+En Windows PowerShell:
+
+```powershell
+Copy-Item findrix_backend/.env.example findrix_backend/.env
+```
+
+Configura como mínimo:
 
 ```env
 PORT=3000
-DATABASE_URL=postgres://usuario:contrasena@localhost:5432/findrix
-JWT_SECRET=coloca_aqui_un_secreto_largo_y_aleatorio
+DATABASE_URL=postgres://postgres:TU_CONTRASEÑA@localhost:5432/findrix
+JWT_SECRET=una_clave_larga_y_privada
 JWT_EXPIRES_IN=7d
+FRONTEND_URL=http://localhost:5173
 ```
 
-El archivo `.env` real no debe subirse al repositorio ni incluirse en ZIP. Solo se distribuye `.env.example`, sin credenciales reales.
+Para Google configura `GOOGLE_CLIENT_ID`. Para Web Push configura las tres variables VAPID. SMTP es opcional durante el desarrollo; sin SMTP, el enlace de recuperación se muestra en la consola del backend.
 
-## Cómo ejecutar
+Nunca subas `.env` al repositorio.
 
-Desde la carpeta `findrix_backend/`:
+## Variables del frontend
+
+Copia el archivo de ejemplo:
 
 ```bash
-npm install
-cp .env.example .env
-npm run dev
+cp "findrix frontend/.env.example" "findrix frontend/.env"
 ```
 
-La API queda disponible, por defecto, en:
+Configura al menos:
+
+```env
+VITE_API_URL=http://localhost:3000/api
+```
+
+Para Google y Web Push agrega los valores correspondientes de `VITE_GOOGLE_CLIENT_ID` y `VITE_VAPID_PUBLIC_KEY`.
+
+## Ejecutar la aplicación
+
+Abre dos terminales en la raíz del repositorio.
+
+Terminal 1, backend:
+
+```bash
+npm run dev:backend
+```
+
+Terminal 2, frontend:
+
+```bash
+npm run dev:frontend
+```
+
+Abre:
 
 ```text
-http://localhost:3000
+http://localhost:5173
 ```
 
-La documentación Swagger queda disponible en:
+Swagger queda disponible en:
 
 ```text
 http://localhost:3000/api/docs
 ```
 
-## Comprobaciones realizadas
+## Verificación rápida
 
-Durante la reorganización se verificó que:
+1. Registra un usuario.
+2. Inicia sesión.
+3. Crea una categoría.
+4. Crea un gasto y un ingreso.
+5. Crea una meta y registra un abono.
+6. Crea un préstamo y registra un pago.
+7. Comprueba las gráficas de Inicio.
+8. Cambia las preferencias en Ajustes y recarga la página.
+9. Prueba los botones `Actualizar` en Metas, Categorías y Movimientos.
+10. Prueba recuperación de contraseña; sin SMTP, revisa la consola del backend.
+11. Revisa la versión responsive desde las herramientas de desarrollo del navegador.
 
-- No existe `pool.query` fuera de `repositories/`.
-- No existen funciones `aCamel` dentro de `services/`.
-- Los controllers no contienen bloques repetidos `try/catch`.
-- Todos los archivos JavaScript pasan `node --check`.
-- La opción de contraseñas planas fue eliminada.
-- `models/` no existe porque estaba vacía y no se utiliza.
-- `utils/categorias.js` no existe; la verificación está en `categoria.service.js`.
-- Swagger responde y el servidor puede iniciar con variables de entorno configuradas.
-- El paquete final no contiene `.env` ni `node_modules/`.
+## Build de producción del frontend
 
-## Prueba manual en Swagger
+```bash
+npm run build:frontend
+```
 
-1. Inicia el backend con `npm run dev`.
-2. Abre `/api/docs`.
-3. Ejecuta `POST /api/auth/registro` o `POST /api/auth/login`.
-4. Copia el token recibido.
-5. Pulsa **Authorize** y usa `Bearer TU_TOKEN`.
-6. Prueba los endpoints existentes de categorías, gastos, ingresos, metas de ahorro y préstamos.
-7. Comprueba que las respuestas mantengan los mismos campos camelCase, códigos HTTP y mensajes de error.
-8. Prueba también los casos de abono, marcado de gasto como pagado y actualización de registros.
+## Estructura principal
+
+```text
+PROYECT-F/
+├── findrix frontend/   # React, Vite, Tailwind, gráficas, PWA y UI
+├── findrix_backend/    # Express, servicios, repositories, Swagger y SQL
+├── EJECUTAR.md         # guía breve de ejecución
+└── package.json        # comandos raíz
+```
+
+## Seguridad
+
+No se incluyen credenciales reales, claves Google, claves VAPID, contraseñas SMTP ni secretos JWT. Cada entorno debe configurar sus propios valores mediante `.env`.
