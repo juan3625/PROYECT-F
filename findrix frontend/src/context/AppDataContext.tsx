@@ -24,6 +24,11 @@ interface NuevaCategoriaInput {
   icono: string;
 }
 
+interface ActualizarCategoriaInput {
+  nombre: string;
+  icono: string;
+}
+
 interface NuevaMetaInput {
   nombre: string;
   montoMeta: number;
@@ -59,6 +64,8 @@ interface AppDataContextValue {
   abonarPrestamo: (prestamoId: string, monto: number) => Promise<void>;
   marcarGastoPagado: (gastoId: string) => Promise<void>;
   agregarCategoria: (input: NuevaCategoriaInput) => Promise<void>;
+  actualizarCategoria: (id: string, input: ActualizarCategoriaInput) => Promise<void>;
+  eliminarCategoria: (id: string) => Promise<void>;
   crearMeta: (input: NuevaMetaInput) => Promise<void>;
   crearPrestamo: (input: NuevoPrestamoInput) => Promise<void>;
   categoriaPorId: (id: string) => Categoria | undefined;
@@ -188,6 +195,18 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setCategorias((prev) => [...prev, nueva]);
   };
 
+  const actualizarCategoria = async (id: string, input: ActualizarCategoriaInput) => {
+    const actualizada = await apiFetch<Categoria>(`/categorias/${id}`, {
+      method: "PUT", body: JSON.stringify(input),
+    }, token);
+    setCategorias((prev) => prev.map((categoria) => categoria.id === id ? actualizada : categoria));
+  };
+
+  const eliminarCategoria = async (id: string) => {
+    await apiFetch<void>(`/categorias/${id}`, { method: "DELETE" }, token);
+    setCategorias((prev) => prev.filter((categoria) => categoria.id !== id));
+  };
+
   const crearMeta = async (input: NuevaMetaInput) => {
     const nueva = await apiFetch<MetaAhorro>(
       "/metas-ahorro",
@@ -253,6 +272,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     abonarPrestamo,
     marcarGastoPagado,
     agregarCategoria,
+    actualizarCategoria,
+    eliminarCategoria,
     crearMeta,
     crearPrestamo,
     categoriaPorId,

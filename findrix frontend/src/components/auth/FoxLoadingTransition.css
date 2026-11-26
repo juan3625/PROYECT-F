@@ -136,6 +136,17 @@
   outline-offset: 3px;
 }
 
+.fox-loading__sound {
+  display: block;
+  margin: 0.75rem auto 0;
+  border: 1px solid var(--color-secondary);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  background: transparent !important;
+  color: var(--color-primary-dark) !important;
+  font-size: 0.75rem !important;
+}
+
 .fox-loading__dots {
   display: block;
   width: 0.45rem;

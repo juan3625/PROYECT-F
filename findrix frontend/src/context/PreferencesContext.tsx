@@ -39,7 +39,7 @@ function leerPreferencias(): Preferencias {
     const guardadas = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
     return {
       tema: guardadas?.tema ?? valoresIniciales.tema,
-      acento: guardadas?.acento ?? valoresIniciales.acento,
+      acento: ["terracota", "musgo", "oro", "cobre"].includes(guardadas?.acento) ? guardadas.acento : valoresIniciales.acento,
       tamanoTexto: guardadas?.tamanoTexto ?? valoresIniciales.tamanoTexto,
       notificacionesActivas: guardadas?.notificacionesActivas ?? valoresIniciales.notificacionesActivas,
       diasAnticipacion: [0, 1, 2, 3, 7].includes(guardadas?.diasAnticipacion)
@@ -59,7 +59,10 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const html = document.documentElement;
-    html.classList.remove("theme-light", "theme-dark", "theme-auto", "text-normal", "text-large");
+    html.classList.remove(
+      "theme-light", "theme-dark", "theme-auto", "text-normal", "text-large",
+      "theme-accent-terracota", "theme-accent-musgo", "theme-accent-oro", "theme-accent-cobre"
+    );
     html.classList.add(`theme-${preferencias.tema === "automatico" ? "auto" : preferencias.tema}`);
     html.classList.add(`theme-accent-${preferencias.acento}`);
     html.classList.add(`text-${preferencias.tamanoTexto === "grande" ? "large" : "normal"}`);

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Tag, BarChart3, User, Lock, Settings, LogOut, ChevronRight } from "lucide-react";
+import { Tag, BarChart3, User, Lock, Settings, LogOut, ChevronRight, WalletCards } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 function FilaEnlace({
@@ -55,6 +55,7 @@ export function MasPage() {
         <div className="divide-y divide-secondary/20 rounded-xl border border-secondary/30 bg-surface">
           <FilaEnlace to="/mas/categorias" icono={Tag} label="Categorías" />
           <FilaEnlace to="/mas/reportes" icono={BarChart3} label="Reportes" />
+          <FilaEnlace to="/mas/economia" icono={WalletCards} label="Economía informal / cash-first" />
         </div>
       </div>
 

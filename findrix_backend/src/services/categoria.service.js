@@ -31,3 +31,14 @@ export async function actualizar(usuarioId, categoriaId, datos) {
   }
   return categoria;
 }
+
+export async function eliminar(usuarioId, categoriaId) {
+  await verificarCategoriaDelUsuario(usuarioId, categoriaId);
+  const usos = await categoriaRepository.contarMovimientos(usuarioId, categoriaId);
+  if (usos.gastos + usos.ingresos > 0) {
+    throw new ErrorApi(409, "No puedes eliminar una categoría que ya tiene movimientos. Edítala para conservar tu historial.");
+  }
+  const eliminada = await categoriaRepository.eliminar(usuarioId, categoriaId);
+  if (!eliminada) throw new ErrorApi(404, "No se encontró esa categoría.");
+  return eliminada;
+}

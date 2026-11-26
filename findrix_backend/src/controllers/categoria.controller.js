@@ -18,3 +18,8 @@ export const putCategoria = asyncHandler(async (req, res) => {
   const categoria = await categoriaService.actualizar(req.usuarioId, req.params.id, datos);
   res.status(200).json(categoria);
 });
+
+export const deleteCategoria = asyncHandler(async (req, res) => {
+  await categoriaService.eliminar(req.usuarioId, req.params.id);
+  res.status(204).send();
+});

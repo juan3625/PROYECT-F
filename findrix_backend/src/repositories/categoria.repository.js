@@ -49,3 +49,21 @@ export async function actualizar(usuarioId, categoriaId, { nombre, icono }) {
   );
   return rows[0] ?? null;
 }
+
+export async function contarMovimientos(usuarioId, categoriaId) {
+  const { rows } = await pool.query(
+    `SELECT
+       (SELECT COUNT(*)::int FROM gasto WHERE usuario_id = $1 AND categoria_id = $2) AS gastos,
+       (SELECT COUNT(*)::int FROM ingreso WHERE usuario_id = $1 AND categoria_id = $2) AS ingresos`,
+    [usuarioId, categoriaId]
+  );
+  return { gastos: rows[0].gastos, ingresos: rows[0].ingresos };
+}
+
+export async function eliminar(usuarioId, categoriaId) {
+  const { rows } = await pool.query(
+    `DELETE FROM categoria WHERE id = $1 AND usuario_id = $2 RETURNING id`,
+    [categoriaId, usuarioId]
+  );
+  return rows[0] ?? null;
+}

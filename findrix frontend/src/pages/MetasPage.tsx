@@ -82,12 +82,14 @@ export function MetasPage() {
             ))}
       </div>
 
-      <button
-        onClick={() => setCreando(true)}
-        className="rounded-xl border border-dashed border-primary/60 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
-      >
-        {tab === "ahorros" ? "+ Nueva meta de ahorro" : "+ Nuevo préstamo"}
-      </button>
+      {(tab === "ahorros" ? metasAhorro.length > 0 : prestamos.length > 0) && (
+        <button
+          onClick={() => setCreando(true)}
+          className="rounded-xl border border-dashed border-primary/60 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
+        >
+          {tab === "ahorros" ? "+ Nueva meta de ahorro" : "+ Nuevo préstamo"}
+        </button>
+      )}
 
       <Sheet abierto={creando} onCerrar={() => setCreando(false)}>
         <NuevaMetaForm

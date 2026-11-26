@@ -1,10 +1,36 @@
 import findrixIcon from "../../assets/findrix-icon.png";
+import { useEffect, useState } from "react";
 import { useAppData } from "../../context/AppDataContext";
 import "./FoxLoadingTransition.css";
 
 export function FoxLoadingTransition({ onReintentar }: { onReintentar: () => void }) {
   const { cargando, errorCarga } = useAppData();
   const hayError = Boolean(errorCarga) && !cargando;
+  const [audioBloqueado, setAudioBloqueado] = useState(false);
+
+  const reproducirBienvenida = () => {
+    try {
+      const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioContextClass) return;
+      const ctx = new AudioContextClass();
+      const now = ctx.currentTime;
+      [523.25, 659.25, 783.99].forEach((frequency, index) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.value = frequency;
+        osc.type = "sine";
+        gain.gain.setValueAtTime(0.0001, now + index * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.06, now + index * 0.12 + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.12 + 0.34);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now + index * 0.12);
+        osc.stop(now + index * 0.12 + 0.36);
+      });
+      window.setTimeout(() => void ctx.close(), 900);
+    } catch { setAudioBloqueado(true); }
+  };
+
+  useEffect(() => { if (!hayError) reproducirBienvenida(); }, [hayError]);
 
   return (
     <main className="fox-loading" aria-live="polite">
@@ -46,6 +72,7 @@ export function FoxLoadingTransition({ onReintentar }: { onReintentar: () => voi
               <h1>Preparando tu espacio</h1>
               <p>El zorro está organizando tus finanzas…</p>
               <span className="fox-loading__dots" aria-label="Cargando" />
+              {audioBloqueado && <button type="button" className="fox-loading__sound" onClick={() => { setAudioBloqueado(false); reproducirBienvenida(); }}>Activar sonido de bienvenida</button>}
             </>
           )}
         </div>

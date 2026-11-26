@@ -14,6 +14,7 @@ import { ReportesPage } from "./pages/ReportesPage";
 import { PerfilPage } from "./pages/PerfilPage";
 import { SeguridadPage } from "./pages/SeguridadPage";
 import { AjustesPage } from "./pages/AjustesPage";
+import { EconomiaPage } from "./pages/EconomiaPage";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/mas/perfil" element={<PerfilPage />} />
           <Route path="/mas/seguridad" element={<SeguridadPage />} />
           <Route path="/mas/ajustes" element={<AjustesPage />} />
+          <Route path="/mas/economia" element={<EconomiaPage />} />
         </Route>
       </Route>
     </Routes>

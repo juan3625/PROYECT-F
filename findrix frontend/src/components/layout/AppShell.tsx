@@ -7,6 +7,8 @@ import { useAppData } from "../../context/AppDataContext";
 import { BrandBar } from "./BrandBar";
 import { FinancialNotifications } from "../notifications/FinancialNotifications";
 import { usePushNotifications } from "../../hooks/usePushNotifications";
+import { FoxCompanion } from "./FoxCompanion";
+import "./FoxCompanion.css";
 
 export interface AbonoOrigen {
   tipo: "ahorro" | "prestamo";
@@ -69,6 +71,7 @@ export function AppShell() {
             tabInicial={tabInicial}
             origenAbono={origenAbono}
           />
+          <FoxCompanion />
         </main>
       </div>
     </div>
