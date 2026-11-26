@@ -43,7 +43,7 @@ export function CategoryExpensesChart({
   const data = totalOtros > 0 ? [...visibles, { nombre: "Otros", total: totalOtros }] : visibles;
 
   return (
-    <section className="rounded-2xl border border-secondary/40 bg-surface p-4" aria-label="Gastos por categoría">
+    <section className="min-w-0 overflow-hidden rounded-2xl border border-secondary/40 bg-surface p-4" aria-label="Gastos por categoría">
       <div className="mb-3">
         <h2 className="text-sm font-semibold text-primary-dark">Gastos por categoría</h2>
         <p className="text-xs text-neutral">Dónde se concentra tu gasto este mes</p>

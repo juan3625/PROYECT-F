@@ -28,7 +28,7 @@ export function MonthlyOverviewChart({
   const data = [{ nombre: "Este mes", ingresos, gastos }];
 
   return (
-    <section className="rounded-2xl border border-secondary/40 bg-surface p-4" aria-label="Ingresos y gastos del mes">
+    <section className="min-w-0 overflow-hidden rounded-2xl border border-secondary/40 bg-surface p-4" aria-label="Ingresos y gastos del mes">
       <div className="mb-3">
         <h2 className="text-sm font-semibold text-primary-dark">Ingresos vs. gastos</h2>
         <p className="text-xs text-neutral">Comparación del mes actual</p>

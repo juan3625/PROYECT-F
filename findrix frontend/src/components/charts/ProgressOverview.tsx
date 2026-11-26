@@ -34,7 +34,7 @@ export function ProgressOverview({
   ];
 
   return (
-    <section className="rounded-2xl border border-secondary/40 bg-surface p-4" aria-label="Progreso de metas y préstamos">
+    <section className="min-w-0 overflow-hidden rounded-2xl border border-secondary/40 bg-surface p-4" aria-label="Progreso de metas y préstamos">
       <div className="mb-3">
         <h2 className="text-sm font-semibold text-primary-dark">Progreso financiero</h2>
         <p className="text-xs text-neutral">Metas de ahorro y préstamos en seguimiento</p>
@@ -50,10 +50,10 @@ export function ProgressOverview({
             const avance = porcentaje(elemento.actual, elemento.total);
             return (
               <div key={elemento.id}>
-                <div className="mb-1.5 flex items-start justify-between gap-3 text-xs">
-                  <div>
-                    <p className="font-semibold text-primary-dark">{elemento.nombre}</p>
-                    <p className="text-neutral">{elemento.tipo} · {elemento.accion} {formatoMoneda(Math.max(0, elemento.total - elemento.actual))}</p>
+                <div className="mb-1.5 flex min-w-0 items-start justify-between gap-3 text-xs">
+                  <div className="min-w-0">
+                    <p className="break-words font-semibold text-primary-dark">{elemento.nombre}</p>
+                    <p className="break-words text-neutral">{elemento.tipo} · {elemento.accion} {formatoMoneda(Math.max(0, elemento.total - elemento.actual))}</p>
                   </div>
                   <span className="shrink-0 font-semibold text-primary-dark">{Math.round(avance * 100)}%</span>
                 </div>

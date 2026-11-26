@@ -38,13 +38,13 @@ export function AppShell() {
   const context: ShellContext = { abrirRegistro };
 
   return (
-    <div className="min-h-screen bg-base-soft">
+    <div className="min-h-screen overflow-x-hidden bg-base-soft">
       <div className="mx-auto flex min-h-screen w-full max-w-7xl bg-base md:my-6 md:min-h-[calc(100vh-3rem)] md:overflow-hidden md:rounded-3xl md:shadow-xl">
         <aside className="hidden w-60 shrink-0 flex-col border-r border-secondary/30 bg-surface md:flex">
           <BrandBar />
           <BottomNav variante="sidebar" />
         </aside>
-        <main className="relative flex min-w-0 flex-1 flex-col">
+        <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
           <div className="md:hidden">
             <BrandBar />
           </div>
@@ -56,7 +56,7 @@ export function AppShell() {
             </div>
           )}
           <FinancialNotifications />
-          <div className="no-scrollbar flex-1 overflow-y-auto pb-24 md:pb-8">
+          <div className="no-scrollbar min-w-0 flex-1 overflow-x-hidden overflow-y-auto pb-24 md:pb-8">
             <Outlet context={context} />
           </div>
           <FAB onClick={() => abrirRegistro()} />
