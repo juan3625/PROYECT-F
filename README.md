@@ -320,3 +320,4 @@ Si se modifica una funcionalidad antes de la defensa, actualiza en este orden:
 - `findrix_backend/README.md` — notas específicas del backend.
 - `findrix_backend/sql/README.md` — base de datos y migraciones.
 - `findrix_backend/sql/modelo_datos.png` — modelo visual de datos.
+- `docs/seguimiento-findrix.md` — fases del proyecto, fechas, comentarios y estado real de la aplicación.
